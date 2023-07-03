@@ -1,0 +1,238 @@
+@font-face {
+    font-family: "Open Sans";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: local('Open Sans'), local('OpenSans'),
+        url("../fonts/OpenSans-Regular.woff2") format("woff2"),
+        url("../fonts/OpenSans-Regular.woff") format("woff");
+}
+
+@font-face {
+    font-family: "Open Sans";
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: local('Open Sans Bold'), local('OpenSans-Bold'),
+        url("../fonts/OpenSans-Bold.woff2") format("woff2"),
+        url("../fonts/OpenSans-Bold.woff") format("woff");
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+:root {
+    --black: #212121;
+    --green: #09A494;
+    --white: #FFFFFF;
+}
+
+.dark-theme {
+    --black: #CCCCCC;
+    --white: #031923;
+}
+
+body {
+    color: var(--black);
+    background-color: var(--white);
+    font-family: "Open Sans", "Arial", sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 1.5;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    padding: 30px 0px 0px;
+    align-items: center;
+    padding-bottom: 60px;
+}
+
+.logo {
+    display: inline-block;
+    font-weight: 700;
+    font-size: 34px;
+    padding-left: 40px;
+    text-align: center;
+}
+
+.header nav ul {
+    display: flex;
+    margin: 0;
+}
+
+.header nav li {
+    display: inline-block;
+    margin-left: 20px;
+}
+
+.header nav a {
+    display: inline-block;
+    color: var(--black);
+    text-decoration: none;
+    padding: 10px 15px 10px 15px;
+    text-align: center;
+}
+
+.header nav a:hover {
+    color: var(--green);
+}
+
+/* logo */
+h1 {
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 0;
+}
+/* title */
+h2 {
+    margin: 0;
+    margin-bottom: 20px;
+}
+
+.wrapper {
+    min-width: 320px;
+    max-width: 90%;
+    margin: 0 auto;
+    display: flex;
+    grid-gap: 60px;
+    grid-template-areas: 
+      "sidebar content"
+  }
+
+.menu {
+    grid-area: sidebar;
+    width: 250px;
+    padding: 0px;
+    padding-left: 20px;
+    margin: 0px;
+    text-align: center;
+    
+    color: var(--black);
+}
+.menu ul {
+    list-style-type: none;
+    color: var(--black);
+    background-color: var(--white);
+    padding: 0px;
+    margin: 0px;
+}
+.menu li {
+    font-size: 18px;
+    text-align: center;
+    padding: 3px;
+    padding-left: 10px;
+    padding-right: 10px;  
+    border-top: 1px solid grey;
+    border-left: 1px solid grey;
+    border-right: 1px solid grey;
+}
+.menu li:hover {
+    background-color: var(--green);
+    color: var(--white);
+}
+.menu li:last-child {
+    border-bottom: 1px solid grey;
+}
+
+.view {
+    grid-area: content;
+    margin: 0;
+}
+
+.view h2 {
+    text-align: center;
+}
+
+.view-wrapper {
+    max-width: 950px;
+}
+
+.view-wrapper p {
+    margin: 0;
+}
+
+.imagesPreview {
+    display: flex;
+    flex-direction: row;
+}
+
+.imagesPreview img{
+    border: 1px solid grey;
+    margin-right: 10px;
+}
+
+button {
+    font-weight: 700;
+    background-color: var(--white);
+    color: var(--green);
+    border: 1px solid var(--green);
+    border-radius: 4px;
+    padding: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+button:hover {
+    color: var(--white);
+    background-color: var(--green);
+}
+
+@media screen and (max-width: 1400px) {
+    .imagesPreview img {
+        max-width: 200px;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .imagesPreview img {
+        max-width: 150px;
+    }
+}
+
+
+@media screen and (max-width: 750px) {
+    .wrapper {
+        flex-direction: column;
+    }
+    .imagesPreview img {
+        max-width: 200px;
+    }
+
+    .menu {
+        width: 100%;
+        padding: 0;
+    }
+}
+
+@media screen and (max-width: 670px) {
+    .imagesPreview img {
+        max-width: 170px;
+    }
+}
+
+@media screen and (max-width: 560px) {
+    .imagesPreview img {
+        max-width: 150px;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .imagesPreview img:last-child {
+        display: none;
+    }
+    .imagesPreview img {
+        max-width: 200px;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .imagesPreview {
+        display: inline-block;
+    }
+}
