@@ -46,6 +46,7 @@ body {
 }
 
 .header {
+    position: relative;
     display: flex;
     flex-direction: row;
     padding: 30px 0px 0px;
@@ -70,6 +71,12 @@ body {
     display: inline-block;
     margin-left: 20px;
 }
+
+.header-signin {
+    position: absolute;
+    right: 60px;
+}
+
 
 .header nav a {
     display: inline-block;
@@ -126,7 +133,7 @@ h2 {
 .menu li {
     font-size: 18px;
     text-align: center;
-    padding: 3px;
+    padding: 5px;
     padding-left: 10px;
     padding-right: 10px;  
     border-top: 1px solid grey;
@@ -135,8 +142,19 @@ h2 {
 }
 .menu li:hover {
     background-color: var(--green);
-    color: var(--white);
 }
+
+.menu li:hover * {
+    color: var(--white);
+    text-decoration: none;
+}
+
+.menu li a:hover {
+    background-color: var(--green);
+    color: var(--white);
+    text-decoration: none;
+}
+
 .menu li:last-child {
     border-bottom: 1px solid grey;
 }
@@ -168,6 +186,10 @@ h2 {
     margin-right: 10px;
 }
 
+a {
+    color: var(--green);
+}
+
 button {
     font-weight: 700;
     background-color: var(--white);
@@ -178,35 +200,18 @@ button {
     padding-top: 10px;
     padding-bottom: 10px;
 }
+
+button a {
+    text-decoration: none;
+}
+
 button:hover {
     color: var(--white);
     background-color: var(--green);
 }
 
-.errorView {
-    position: relative;
-    display: flex;
-
-    min-width: 270px;
-    max-width: 500px;
-}
-.errorView p {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-    min-width: 270px;
-    max-width: 500px;
-
-    margin: 0;
-    padding: 10px;
-    font-weight: 400;
-    font-size: 18px;
-    
-    background-color: grey;
+button:hover * {
     color: var(--white);
-    border: 1px solid var(--black);
 }
 
 @media screen and (max-width: 1400px) {
@@ -220,7 +225,6 @@ button:hover {
         max-width: 150px;
     }
 }
-
 
 @media screen and (max-width: 750px) {
     .wrapper {

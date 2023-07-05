@@ -19,11 +19,12 @@ const emptyNameSet = "unknown"
 func (app *Application) InitFiber(port int) error {
 	app.host.fiber = fiber.New()
 	app.host.fiber.Use(cors.New(cors.Config{
-		AllowOrigins: "*",
+		AllowOrigins: "*", // rename
 		AllowHeaders: "Origin, Content-Type, Accept",
 		AllowMethods: strings.Join([]string{
 			fiber.MethodGet,
 			fiber.MethodPost,
+			fiber.MethodPut,
 		}, ","),
 	}))
 

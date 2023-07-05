@@ -53,7 +53,7 @@ export default class View extends React.Component {
                             ))}
                         </ul>
                         <button>
-                            Скачать
+                            <a href = {"/dataset/" + idName + ".zip"}>Скачать</a>
                         </button>
                     </div>
                 </div>
