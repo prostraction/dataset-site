@@ -77,7 +77,6 @@ body {
     right: 60px;
 }
 
-
 .header nav a {
     display: inline-block;
     color: var(--black);
@@ -214,15 +213,147 @@ button:hover * {
     color: var(--white);
 }
 
+.buttonPlaceholder {
+    font-weight: 700;
+    background-color: var(--white);
+    color: var(--green);
+    border: 1px solid var(--green);
+    border-radius: 4px;
+    margin-top: 10px;
+    padding: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.buttonPlaceholder a {
+    text-decoration: none;
+}
+
+.buttonPlaceholder:hover {
+    color: var(--white);
+    background-color: var(--green);
+}
+
+.buttonReset:hover * {
+    color: var(--white);
+}
+
+.buttonReset {
+    font-weight: 700;
+    background-color: var(--white);
+    color: grey;
+    border: 1px solid grey;
+    border-radius: 4px;
+    margin-top: 10px;
+    padding: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.buttonReset a {
+    text-decoration: none;
+}
+
+.buttonReset:hover {
+    color: var(--white);
+    background-color: grey;
+}
+
+.buttonReset:hover * {
+    color: var(--white);
+}
+
+input {
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.bigPlaceholder {
+    max-width: 300px;
+}
+
+.mediumPlaceholder {
+    max-width: 140px;
+}
+
+.smallPlaceholder {
+    max-width: 120px;
+}
+
+.tinyPlaceholder {
+    max-width: 63px;
+}
+
+
+.hidingAdditionalInput {
+    display: none;
+}
+
+.selectionImg {
+    width: 300px;
+    height: 300px;
+    background: url(/img/add.svg);
+    background-size: 120px;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-top: 10px;
+    margin-right: 10px;
+    border: 1px solid var(--green);
+    color: transparent;
+    text-indent: -9999px;
+}
+
+.selectedImg {
+    width: 300px;
+    height: 300px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 300px;
+    margin-top: 10px;
+    margin-right: 10px;
+    border: 1px solid var(--green);
+    color: transparent;
+    text-indent: -9999px;
+}
+
 @media screen and (max-width: 1400px) {
     .imagesPreview img {
         max-width: 200px;
+        max-height: 200px;
     }
+    .selectionImg {
+       width: 200px;
+       height: 200px;
+    }
+    .selectedImg {
+        width: 200px;
+        height: 200px;
+        background-size: 200px;
+     }
 }
 
 @media screen and (max-width: 900px) {
     .imagesPreview img {
         max-width: 150px;
+        max-height: 150px;
+    }
+    .selectionImg {
+        width: 150px;
+        height: 150px;
+     }
+     .selectedImg {
+        width: 150px;
+        height: 150px;
+        background-size: 150px;
+     }
+     .hideingAdditionalInput {
+        display: inline;
+    }
+    .smallPlaceholder {
+       max-width: 300px;
+    }
+    .tinyPlaceholder {
+        max-width: 300px;
     }
 }
 
@@ -232,7 +363,17 @@ button:hover * {
     }
     .imagesPreview img {
         max-width: 200px;
+        max-height: 200px;
     }
+    .selectionImg {
+        width: 200px;
+        height: 200px;
+     }
+     .selectedImg {
+        width: 200px;
+        height: 200px;
+        background-size: 200px;
+     }
 
     .menu {
         width: 100%;
@@ -243,26 +384,60 @@ button:hover * {
 @media screen and (max-width: 670px) {
     .imagesPreview img {
         max-width: 170px;
+        max-height: 170px;
     }
+    .selectionImg {
+        width: 170px;
+        height: 170px;
+     }
+     .selectedImg {
+        width: 170px;
+        height: 170px;
+        background-size: 170px;
+     }
 }
 
 @media screen and (max-width: 560px) {
     .imagesPreview img {
         max-width: 150px;
+        max-height: 150px;
     }
+    .selectionImg {
+        width: 150px;
+        height: 150px;
+     }
+     .selectedImg {
+        width: 150px;
+        height: 150px;
+        background-size: 150px;
+     }
 }
 
 @media screen and (max-width: 500px) {
-    .imagesPreview img:last-child {
+    /*.imagesPreview img:last-child {
         display: none;
     }
     .imagesPreview img {
         max-width: 200px;
-    }
+        max-height: 200px;
+    }*/
 }
 
 @media screen and (max-width: 450px) {
     .imagesPreview {
         display: inline-block;
     }
+    .imagesPreview img {
+        max-width: 150px;
+        max-height: 150px;
+    }
+    .selectionImg {
+        width: 150px;
+        height: 150px;
+     }
+     .selectedImg {
+        width: 150px;
+        height: 150px;
+        background-size: 150px;
+     }
 }

@@ -31,6 +31,7 @@ export default class Menu extends React.Component {
                 {Object.keys(names).map((k) => (
                     <li key={names[k].name.Name}><a href={"/ds/" + names[k].name.Name}>{names[k].name.Value}</a></li>   
                 ))}
+                <li key="addDataSet"><a href={"/add"}>Добавить датасет</a></li>
               </ul>
             </div>
           );
