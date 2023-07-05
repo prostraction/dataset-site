@@ -2,32 +2,37 @@ import * as React from "react";
 
 export default class View extends React.Component {
     constructor() {
-        super()
+        super();
         this.state = {
             isLoaded: false
-        }
+        };
     }
 
     componentDidMount() {
-        fetch('http://127.0.0.1:9999/dataset?' + new URLSearchParams({
-            name: 'TreeLeafsDirty',
-        }))
-        .then(response => response.json())
-        .then((json) => {
-            this.setState({
-                dataset: json,
-                isLoaded: true,
-            })
-        });
+        const idName = window.location.href.split('/')[4];
+        console.log(idName);
+        if (idName.length > 0) {
+                fetch('http://127.0.0.1:9999/dataset?' + new URLSearchParams({
+                name: idName,
+            }))
+            .then(response => response.json())
+            .then((json) => {
+                this.setState({
+                    dataset: json,
+                    isLoaded: true,
+                })
+            });
+        }
     }
 
     render() {
+        const idName = window.location.href.split('/')[4];
         const {dataset, isLoaded} = this.state;
         if (!isLoaded) {
             return (
-                <div className="errorView">
-                    <div>
-                        <p>Выберите датасет из списка</p>
+                <div className="view">
+                    <div className="view-wrapper">
+
                     </div>
                 </div>
             )
@@ -37,9 +42,9 @@ export default class View extends React.Component {
                     <div className="view-wrapper">
                         <h2>{dataset.name.Value}</h2>
                         <div className="imagesPreview">
-                            <img src="/img/1.jpg" width="300"></img>
-                            <img src="/img/2.jpg" width="300"></img>
-                            <img src="/img/3.jpg" width="300"></img>
+                            <img alt="Element 1" src={"/img/"+idName+"/1.jpg"} width="300"></img>
+                            <img alt="Element 2" src={"/img/"+idName+"/2.jpg"} width="300"></img>
+                            <img alt="Element 3" src={"/img/"+idName+"/3.jpg"} width="300"></img>
                         </div>
                         <ul>
                             <li>{dataset.date.Name} {dataset.date.Value} {dataset.time.Name} {dataset.time.Value}</li>

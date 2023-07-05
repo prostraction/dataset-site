@@ -70,5 +70,31 @@ func (db *Database) LoadSet(name string) (Set, error) {
 
 	db.Disconnect()
 	return result, nil
-	//fmt.Println(test.CountDocuments(context.Background(), bson.D{}, nil))
+}
+
+func (db *Database) LoadList() ([]ListOfSets, error) {
+	if err := db.Connect(); err != nil {
+		return []ListOfSets{}, err // some err handling
+	}
+
+	defer db.Disconnect()
+
+	test := db.con.Database(db.name).Collection(db.collection)
+	var result []ListOfSets
+	filter := bson.D{}
+	cursor, err := test.Find(context.Background(), filter)
+	if err != nil {
+		return []ListOfSets{}, err
+	}
+	for cursor.Next(context.Background()) {
+		var list ListOfSets
+		if err := cursor.Decode(&list); err != nil {
+			return []ListOfSets{}, err
+		}
+		result = append(result, list)
+	}
+	if err := cursor.Err(); err != nil {
+		return []ListOfSets{}, err
+	}
+	return result, err
 }

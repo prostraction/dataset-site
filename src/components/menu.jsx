@@ -1,17 +1,40 @@
 import * as React from "react";
 
 export default class Menu extends React.Component {
+ constructor() {
+    super();
+    this.state = {
+        isLoaded: false
+    };
+ }
+
+ componentDidMount()  {
+    fetch('http://127.0.0.1:9999/list')
+    .then(response => response.json())
+    .then((json) => {        
+        this.setState({
+            names: json,
+            isLoaded: true,
+        })
+    });
+ }
+
   render() {
-    return (
-      <div className="menu">
-        <h2>Датасеты</h2>
-        <ul>
-          <li>Листья (с фоном)</li>
-          <li>Листья (без фона)</li>
-          <li>Шумы ISO 12800</li>
-          <li>Шумы ISO 6400</li>
-        </ul>
-      </div>
-    );
+    const {names, isLoaded} = this.state;
+    if (!isLoaded) {
+        return (<div className="menu"><h2>Датасеты</h2></div>)
+    } else {
+        return (
+            <div className="menu">
+              <h2>Датасеты</h2>
+              <ul>
+                {Object.keys(names).map((k) => (
+                    <li key={names[k].name.Name}><a href={"/ds/" + names[k].name.Name}>{names[k].name.Value}</a></li>   
+                ))}
+              </ul>
+            </div>
+          );
+    }
+    
   }
 }
