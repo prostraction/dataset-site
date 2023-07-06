@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"fmt"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -71,6 +72,7 @@ func (db *Database) LoadSet(name string) (Set, error) {
 	if err != nil {
 		return Set{}, err
 	}
+	fmt.Println(result)
 
 	db.cacheSet[name] = result
 	return result, nil

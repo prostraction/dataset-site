@@ -176,7 +176,7 @@ h2 {
 }
 
 .imagesPreview {
-    display: flex;
+    display: inline-block;
     flex-direction: row;
 }
 

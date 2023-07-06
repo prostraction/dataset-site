@@ -30,9 +30,7 @@ export default class View extends React.Component {
             case "date": return false
             case "time": return false
             case "name": return false
-            case "imagePreviewName1": return false
-            case "imagePreviewName2": return false
-            case "imagePreviewName3": return false
+            case "imagePreviewName": return false
             case "downloadLink": return false
             default:
                 return true
@@ -56,9 +54,9 @@ export default class View extends React.Component {
                     <div className="view-wrapper">
                         <h2>{dataset.name.Value}</h2>
                         <div className="imagesPreview">
-                            <img alt={dataset.imagePreviewName1.Value} src={dataset.imagePreviewName1.Value} height="300" width="300"></img>
-                            <img alt={dataset.imagePreviewName2.Value} src={dataset.imagePreviewName2.Value} height="300" width="300"></img>
-                            <img alt={dataset.imagePreviewName3.Value} src={dataset.imagePreviewName3.Value} height="300" width="300"></img>
+                            {Object.entries(dataset.imagePreviewName).map((key) => (
+                                    <img alt={key[1].Name} src={key[1].Value} height="300" width="300"></img>
+                                ))}
                         </div>
                         <ul>
                             <li>{dataset.date.Name} {dataset.date.Value} {dataset.time.Name} {dataset.time.Value}</li>
