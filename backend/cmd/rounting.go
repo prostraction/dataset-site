@@ -9,7 +9,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/gofiber/fiber/v2/middleware/filesystem"
 )
 
 type HostRoutes struct {
@@ -30,16 +29,11 @@ func (app *Application) InitFiber(port int) error {
 		}, ","),
 	}))
 
-	app.host.fiber.Use("/downloads", filesystem.New(filesystem.Config{
-		Root:       http.FS(app.embedDir),
-		PathPrefix: "downloads",
-		Browse:     true,
-	}))
-
 	app.host.fiber.Get("/status", status)
 	app.host.fiber.Get("/dataset", app.getSet)
 	app.host.fiber.Get("/list", app.getListOfSets)
 	app.host.fiber.Post("/uploadPhoto", app.uploadPhoto)
+	app.host.fiber.Post("/uploadFile", app.uploadFile)
 
 	app.log.Fatal(app.host.fiber.Listen(":" + strconv.Itoa(port)))
 	return nil
@@ -73,25 +67,44 @@ func (app *Application) getListOfSets(c *fiber.Ctx) error {
 	return c.JSON(jsonSet)
 }
 
-func (app *Application) uploadPhoto(c *fiber.Ctx) error {
-	file, err := c.FormFile("photo")
+func (app *Application) uploadHandler(c *fiber.Ctx, strType string, strPath string) error {
+	file, err := c.FormFile(strType)
 	if err != nil {
-		app.log.Info(err)
 		return err
 	}
 
 	path := strings.Split(file.Filename, ",")
 	if len(path) == 2 {
 		dir := path[0]
-		os.MkdirAll(filepath.Join("images", dir), os.ModeDir)
+		os.MkdirAll(filepath.Join(strPath, dir), os.ModeDir)
 		file.Filename = filepath.Join(dir, path[1])
 	}
 
-	err = c.SaveFile(file, filepath.Join("images", file.Filename))
+	err = c.SaveFile(file, filepath.Join(strPath, file.Filename))
 	if err != nil {
-		app.log.Info(err)
 		return err
 	}
-	app.log.Info(file.Filename)
 	return nil
+}
+
+// uploadPhoto receives file from POST request,
+// makes new folder "images/{dataset_name}" and
+// put received file to it
+func (app *Application) uploadPhoto(c *fiber.Ctx) error {
+	err := app.uploadHandler(c, "photo", "images")
+	if err != nil {
+		app.log.Info(err)
+	}
+	return err
+}
+
+// uploadFile receives file from POST request,
+// makes new folder "downloads/{dataset_name}" and
+// put received file to it
+func (app *Application) uploadFile(c *fiber.Ctx) error {
+	err := app.uploadHandler(c, "upload", "downloads")
+	if err != nil {
+		app.log.Info(err)
+	}
+	return err
 }

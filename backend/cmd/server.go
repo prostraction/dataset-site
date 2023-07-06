@@ -2,7 +2,6 @@ package main
 
 import (
 	"dataset/internal/db"
-	"embed"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -14,10 +13,9 @@ type ConnectionInfo struct {
 }
 
 type Application struct {
-	host     HostRoutes
-	db       db.Database
-	log      *logrus.Logger
-	embedDir embed.FS
+	host HostRoutes
+	db   db.Database
+	log  *logrus.Logger
 }
 
 func main() {

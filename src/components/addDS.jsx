@@ -78,20 +78,33 @@ export default class AddDS extends React.Component {
   uploadPhotosToServer() {
     for (let i = 0; i < this.state.photos.length; i++) {
         if (this.state.photos[i] != null) {
-            this.photo = this.state.photos[i]
-            const formData  = new FormData();
+            this.photo = this.state.photos[i];
+            const formData = new FormData();
             formData.append("photo", this.photo, this.state.dbJson.name.Value + "," + this.photo.name);
             fetch("http://127.0.0.1:9999/uploadPhoto", {
                method: "POST",
                body: formData
-            })
+            });
         }
+    }
+  }
+
+  uploadFileToServer() {
+    this.file = this.state.file;
+    if (this.file != null) {
+        const formData = new FormData();
+        formData.append("upload", this.file, this.state.dbJson.name.Value + "," + this.file.name);
+        fetch("http://127.0.0.1:9999/uploadFile", {
+               method: "POST",
+               body: formData
+        });
     }
   }
 
   handleSubmit(event) {
     event.preventDefault();
     this.uploadPhotosToServer();
+    this.uploadFileToServer();
     console.log(this.state);
   }
 
@@ -108,7 +121,6 @@ export default class AddDS extends React.Component {
 
     this.photos = this.state.photos;
     this.imagePreviewName = this.json.imagePreviewName;
-    console.log(this.imagePreviewName)
     
     this.photoID = event.target.id;
     if (this.photoID.length < 4) {
@@ -128,22 +140,20 @@ export default class AddDS extends React.Component {
     this.json.imagePreviewName[parseInt(this.photoID) - 1].Name = "photo" + this.photoID
     this.json.imagePreviewName[parseInt(this.photoID) - 1].Value = event.target.files[0].name
 
-    this.setState(prevState => ({
+    this.setState({
         dbJson: this.json,
-        photos: this.photos,
-        file: {...prevState.file}
-      }));
+        photos: this.photos
+    });
   }
 
   handleUploadFile(event) {
-    console.log(event.target);
-    console.log(event.target.files[0])
-    this.setState(prevState => ({
-        dbJson:{
-          ...prevState.dbJson,
-          },
+    this.json = this.state.dbJson
+    this.json.downloadLink.Name = "file1"
+    this.json.downloadLink.Value = event.target.files[0].name
+    this.setState({
+        dbJson: this.json,
         file: event.target.files[0]
-      }));
+    });
   }
 
   handleChange(event) {
