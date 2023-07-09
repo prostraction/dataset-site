@@ -85,6 +85,7 @@ export default class AddDS extends React.Component {
 
   uploadJSONtoServer() {
     if (this.state.dbJson != null) {
+      console.log("hello?")
       fetch("http://127.0.0.1:9999/postJSON", {
         method: "POST",
         body: JSON.stringify(this.state.dbJson),

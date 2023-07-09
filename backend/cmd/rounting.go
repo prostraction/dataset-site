@@ -3,6 +3,7 @@ package main
 import (
 	"dataset/internal/db"
 	"errors"
+	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -38,6 +39,9 @@ func (app *Application) InitFiber(port int) error {
 	app.host.fiber.Post("/postPhoto", app.postPhoto)
 	app.host.fiber.Post("/postFile", app.postFile)
 	app.host.fiber.Post("/postJSON", app.postJSON)
+	app.host.fiber.Put("/putPhoto", app.putPhoto)
+	app.host.fiber.Put("/putFile", app.putFile)
+	app.host.fiber.Put("/putJSON", app.putJSON)
 
 	app.log.Fatal(app.host.fiber.Listen(":" + strconv.Itoa(port)))
 	return nil
@@ -56,6 +60,7 @@ func (app *Application) getSet(c *fiber.Ctx) error {
 	if nameSet == emptyNameSet {
 		return c.Status(http.StatusUnprocessableEntity).SendString("name is required")
 	}
+	app.log.Info("Called getSet with name = ", nameSet)
 	jsonSet, err := app.db.LoadSet(nameSet)
 	if err != nil {
 		return c.Status(http.StatusBadGateway).SendString("database error" + err.Error())
@@ -99,6 +104,21 @@ func (app *Application) uploadHandler(c *fiber.Ctx, strType string, strPath stri
 	return nil
 }
 
+func (app *Application) putJSON(c *fiber.Ctx) error {
+	app.log.Info("PUT called with ", c.Query("name"))
+	app.db.DeleteSet(c.Query("name"))
+	app.postJSON(c)
+	return nil
+}
+
+func (app *Application) putPhoto(c *fiber.Ctx) error {
+	return nil
+}
+
+func (app *Application) putFile(c *fiber.Ctx) error {
+	return nil
+}
+
 // postPhoto receives file from POST request,
 // makes new folder "images/{dataset_name}" and
 // put received file to it
@@ -133,24 +153,30 @@ func (app *Application) postJSON(c *fiber.Ctx) error {
 		c.Status(http.StatusBadGateway).SendString("name should contain ASCII chars")
 		return errors.New("name should contain ASCII chars")
 	}
-	for _, k := range set.ImagePreviewName {
-		if str, ok := k.Value.(string); ok {
+	for i := 0; i < len(set.ImagePreviewName); i++ {
+		if str, ok := set.ImagePreviewName[i].Value.(string); ok {
 			str = regexp.MustCompile(`[^a-zA-Z0-9.]`).ReplaceAllString(str, "")
 			if len(str) < 1 {
 				c.Status(http.StatusBadGateway).SendString("image name should contain ASCII chars")
 				return errors.New("image name should contain ASCII chars")
 			}
-			k.Value = str
+			app.log.Info("Changed Image Link from ", set.ImagePreviewName[i].Value, " to ", str)
+			set.ImagePreviewName[i].Value = str
 		}
 	}
 	if str, ok := set.DownloadLink.Value.(string); ok {
-		str = regexp.MustCompile(`[^a-zA-Z0-9.]`).ReplaceAllString(str, "")
-		if len(str) < 1 {
-			c.Status(http.StatusBadGateway).SendString("download name should contain ASCII chars")
-			return errors.New("download name should contain ASCII chars")
+		if len(str) > 0 {
+			str = regexp.MustCompile(`[^a-zA-Z0-9.]`).ReplaceAllString(str, "")
+			if len(str) < 1 {
+				c.Status(http.StatusBadGateway).SendString("download name should contain ASCII chars")
+				return errors.New("download name should contain ASCII chars")
+			}
+			app.log.Info("Changed Download Link from ", set.DownloadLink.Value, " to ", str)
+			set.DownloadLink.Value = str
 		}
-		set.DownloadLink.Value = str
 	}
+
+	fmt.Println(set)
 
 	if err := app.db.PushSet(set); err != nil {
 		app.log.Info(err)

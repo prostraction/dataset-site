@@ -108,6 +108,7 @@ export default class InputDS extends React.Component {
         console.log(this.props)
         console.log("props: ", edit)
         return (
+            <div className="view">
             <div className="view-wrapper">
               <form
                 onSubmit={this.handleSubmit}
@@ -202,6 +203,7 @@ export default class InputDS extends React.Component {
                   onChange={this.handleUploadFile}
                 ></input>
               </form>
+            </div>
             </div>
         );
       }

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { BrowserRouter as Rounter, Routes, Route } from "react-router-dom";
 import Menu from "./menu.jsx";
-import View from "./view.jsx";
+import View from "./viewDS.jsx";
 import AddDS from "./addDS.jsx";
 
 export class App extends React.Component {
@@ -15,7 +15,7 @@ export class App extends React.Component {
           </React.Fragment>
            
             <Routes>
-              <Route exact path='/ds/:name' element={<View></View>}></Route>
+              <Route exact path='/set/:name' element={<View></View>}></Route>
               <Route exact path='/add' element={<AddDS></AddDS>}></Route>
             </Routes>
         </div>

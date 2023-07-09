@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -69,7 +70,7 @@ func (db *Database) LoadSet(name string) (Set, error) {
 	filter := bson.D{{Key: "name.name", Value: name}}
 	err := collection.FindOne(context.Background(), filter).Decode(&result)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("Loading ", name, " error: ", err)
 		return Set{}, err
 	}
 
@@ -111,6 +112,10 @@ func (db *Database) LoadList() ([]ListOfSets, error) {
 }
 
 func (db *Database) PushSet(set Set) error {
+	if _, ok := db.GetCachedSet(set.Name.Name); ok {
+		return errors.New("dataset already exists")
+	}
+
 	if err := db.Connect(); err != nil {
 		return err
 	}
@@ -120,6 +125,27 @@ func (db *Database) PushSet(set Set) error {
 	_, err := collection.InsertOne(context.Background(), set)
 	db.LoadSetListCache()
 	return err
+}
+
+func (db *Database) DeleteSet(name string) error {
+	if err := db.Connect(); err != nil {
+		return err
+	}
+	defer db.Disconnect()
+
+	collection := db.con.Database(db.name).Collection(db.collection)
+	filter := bson.D{{Key: "name.name", Value: name}}
+	opts := options.Delete().SetHint(bson.D{{Key: "_id", Value: 1}})
+	result, err := collection.DeleteMany(context.Background(), filter, opts)
+	if err != nil {
+		return err
+	}
+	fmt.Println("Removed: ", result.DeletedCount)
+	db.LoadSetListCache()
+	if db.cacheSet != nil {
+		delete(db.cacheSet, name)
+	}
+	return nil
 }
 
 func (db *Database) InitCache() {
