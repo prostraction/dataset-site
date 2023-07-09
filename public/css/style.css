@@ -46,18 +46,24 @@ body {
 }
 
 .header {
+    background-color: #212121;
+    color: var(--white);
     position: relative;
     display: flex;
     flex-direction: row;
-    padding: 30px 0px 0px;
+    padding: 5px 0px 0px;
     align-items: center;
-    padding-bottom: 60px;
+    padding-bottom: 5px;
+}
+
+.header * {
+    color: var(--white);
 }
 
 .logo {
     display: inline-block;
-    font-weight: 700;
-    font-size: 34px;
+    font-weight: 400;
+    font-size: 26px;
     padding-left: 40px;
     text-align: center;
 }
@@ -79,7 +85,8 @@ body {
 
 .header nav a {
     display: inline-block;
-    color: var(--black);
+    color: var(--white);
+    font-size: 18px;
     text-decoration: none;
     padding: 10px 15px 10px 15px;
     text-align: center;
@@ -118,6 +125,7 @@ h2 {
     padding: 0px;
     padding-left: 20px;
     margin: 0px;
+    margin-top: 20px;
     text-align: center;
     
     color: var(--black);
@@ -161,6 +169,7 @@ h2 {
 .view {
     grid-area: content;
     margin: 0;
+    margin-top: 20px;
 }
 
 .view h2 {

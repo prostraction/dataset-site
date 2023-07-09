@@ -16,9 +16,8 @@ type Database struct {
 	name       string
 	collection string
 
-	cacheList       []ListOfSets
-	cacheListLoaded bool
-	cacheSet        map[string]Set
+	cacheList []ListOfSets
+	cacheSet  map[string]Set
 }
 
 func (db *Database) InitDatabase(uri string, name string, collection string) (err error) {
@@ -67,19 +66,19 @@ func (db *Database) LoadSet(name string) (Set, error) {
 
 	var result Set
 	collection := db.con.Database(db.name).Collection(db.collection)
-	filter := bson.D{{Key: "name.Name", Value: name}}
+	filter := bson.D{{Key: "name.name", Value: name}}
 	err := collection.FindOne(context.Background(), filter).Decode(&result)
 	if err != nil {
+		fmt.Println(err)
 		return Set{}, err
 	}
-	fmt.Println(result)
 
 	db.cacheSet[name] = result
 	return result, nil
 }
 
 func (db *Database) LoadList() ([]ListOfSets, error) {
-	if db.cacheListLoaded {
+	if db.cacheList != nil {
 		return db.cacheList, nil
 	}
 
@@ -107,14 +106,31 @@ func (db *Database) LoadList() ([]ListOfSets, error) {
 	}
 
 	db.cacheList = result
-	db.cacheListLoaded = true
 
 	return result, err
 }
 
+func (db *Database) PushSet(set Set) error {
+	if err := db.Connect(); err != nil {
+		return err
+	}
+	defer db.Disconnect()
+
+	collection := db.con.Database(db.name).Collection(db.collection)
+	_, err := collection.InsertOne(context.Background(), set)
+	db.LoadSetListCache()
+	return err
+}
+
 func (db *Database) InitCache() {
-	db.cacheListLoaded = false
 	db.cacheSet = make(map[string]Set)
+}
+
+func (db *Database) LoadSetListCache() {
+	if db.cacheList != nil {
+		db.cacheList = nil
+	}
+	db.LoadList()
 }
 
 func (db *Database) GetCachedSet(name string) (val Set, err bool) {
@@ -126,7 +142,6 @@ func (db *Database) GetCachedSet(name string) (val Set, err bool) {
 }
 
 func (db *Database) ClearAllCache() {
-	db.cacheListLoaded = false
 	db.cacheList = nil
 	db.cacheSet = nil
 }
