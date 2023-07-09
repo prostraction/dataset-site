@@ -28,6 +28,7 @@
     --black: #212121;
     --green: #09A494;
     --white: #FFFFFF;
+    --grey: #EFEFEF;
 }
 
 .dark-theme {
@@ -41,7 +42,7 @@ body {
     font-family: "Open Sans", "Arial", sans-serif;
     font-style: normal;
     font-weight: 400;
-    font-size: 20px;
+    font-size: 18px;
     line-height: 1.5;
 }
 
@@ -87,7 +88,7 @@ body {
 .header nav a {
     display: inline-block;
     color: var(--white);
-    font-size: 18px;
+    font-size: 16px;
     text-decoration: none;
     padding: 10px 15px 10px 15px;
     text-align: center;
@@ -95,6 +96,14 @@ body {
 
 .header nav a:hover {
     color: var(--green);
+}
+
+footer {
+    position: relative;
+    background-color: #212121;
+    color: var(--white);
+    margin: 0;
+    padding: 0;
 }
 
 /* logo */
@@ -112,7 +121,8 @@ h2 {
 
 .wrapper {
     min-width: 320px;
-    max-width: 90%;
+    /*max-width: 90%;*/
+    height: calc(100vh - 97px);
     margin: 0 auto;
     display: flex;
     grid-gap: 60px;
@@ -120,42 +130,74 @@ h2 {
       "sidebar content"
   }
 
+  .wrapper-footer {
+    min-width: 320px;
+    max-width: 90%;
+    padding: 8px;
+    margin: 0 auto;
+    display: flex;
+  }
+
 .menu {
     grid-area: sidebar;
-    width: 250px;
+    position: relative;
+    
+    height: 100%;
+    width: 500px;
     padding: 0px;
-    padding-left: 20px;
+    padding-top: 20px;
+    padding-left: 80px;
     margin: 0px;
-    margin-top: 20px;
-    text-align: center;
+    /*margin-top: 20px;
+
+    padding-left: 20px;*/
     
     color: var(--black);
+    background-color: var(--grey);
 }
+
+.menu h3 {
+    font-size: 16px;
+}
+
+/*.menu h2 {
+    background-color: var(--white);
+}*/
 .menu ul {
     list-style-type: none;
     color: var(--black);
-    background-color: var(--white);
+    background-color: var(--grey);
     padding: 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     margin: 0px;
 }
+
+
 .menu li {
     font-size: 18px;
-    text-align: center;
     padding: 5px;
-    padding-left: 10px;
-    padding-right: 10px;  
-    border-top: 1px solid grey;
-    border-left: 1px solid grey;
-    border-right: 1px solid grey;
-}
-.menu li:hover {
-    background-color: var(--green);
+    padding-left: 0;
+    /*padding-left: 50px;*/
+    padding-right: 10px;
+    /*border-top: 1px solid grey;*/
+    /*border-left: 1px solid grey;*/
+    /*border-right: 1px solid grey;*/
 }
 
-.menu li:hover * {
-    color: var(--white);
+.menu li a {
+    color: var(--black);
     text-decoration: none;
 }
+
+/*.menu li:hover {*/
+/*    background-color: var(--green);*/
+/*}*/
+/**/
+/*.menu li:hover * {*/
+/*    color: var(--white);*/
+/*    text-decoration: none;*/
+/*}*/
 
 .menu li a:hover {
     background-color: var(--green);
@@ -163,9 +205,9 @@ h2 {
     text-decoration: none;
 }
 
-.menu li:last-child {
+/*.menu li:last-child {
     border-bottom: 1px solid grey;
-}
+}*/
 
 .view {
     grid-area: content;

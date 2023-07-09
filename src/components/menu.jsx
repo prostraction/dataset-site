@@ -24,7 +24,7 @@ export default class Menu extends React.Component {
     if (!isLoaded || names === null) {
       return (
         <div className="menu">
-          <h2>Датасеты</h2>
+          <h3>ДАТАСЕТЫ</h3>
           <ul>
             <li key="addDataSet">
               <a href={"/add"}>Добавить датасет</a>
@@ -35,16 +35,24 @@ export default class Menu extends React.Component {
     } else {
       return (
         <div className="menu">
-          <h2>Датасеты</h2>
+          <h3>ДАТАСЕТЫ</h3>
           <ul>
-            {Object.keys(names).map((k) => (
-              <li key={names[k].name.Name}>
-                <a href={"/set/" + names[k].name.Name}>{names[k].name.Value}</a>
-              </li>
+            <li>Без категории</li>
+              <li>
+                <ul>
+                  {Object.keys(names).map((k) => (
+                    <li key={names[k].name.Name}>
+                      <a href={"/set/" + names[k].name.Name}>{names[k].name.Value}</a>
+                    </li>
             ))}
+              </ul>
+            </li>
+            <ul>
             <li key="addDataSet">
               <a href={"/add"}>Добавить датасет</a>
             </li>
+            </ul>
+            
           </ul>
         </div>
       );

@@ -10,16 +10,21 @@ export class App extends React.Component {
     return (
       <Rounter>
         <div className="wrapper">
-          <React.Fragment>
-              <Menu></Menu>
-          </React.Fragment>
-           
             <Routes>
-              <Route exact path='/set/:name' element={<View></View>}></Route>
-              <Route exact path='/add' element={<AddDS></AddDS>}></Route>
+              <Route exact path='/' element={<Menu></Menu>}></Route>
+              <Route exact path='/set/:name' element={<><Menu></Menu><View></View></>}></Route>
+              <Route exact path='/add' element={<><Menu></Menu><AddDS></AddDS></>}></Route>
             </Routes>
         </div>
       </Rounter>
     );
   }
 }
+
+/*
+
+<React.Fragment>
+              <Menu></Menu>
+          </React.Fragment>
+
+          */
