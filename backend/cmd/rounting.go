@@ -66,7 +66,7 @@ func (app *Application) uploadHandler(c *fiber.Ctx, strType string, strPath stri
 
 	file, err := c.FormFile(strType)
 	if err != nil {
-		app.log.Info(err.Error())
+		app.log.Info("Error here!", strType, strPath, datasetName, err.Error(), file)
 		return err
 	}
 	file.Filename = regexp.MustCompile(`[^a-zA-Z0-9.]`).ReplaceAllString(file.Filename, "")

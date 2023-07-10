@@ -1,15 +1,15 @@
 import * as React from "react";
-import InputDS from './inputDS';
+import InputDS from "./inputDS";
 
 export default class AddDS extends React.Component {
   constructor(props) {
     super(props);
     this.json = JSON.parse(JSON.stringify(AddDS.initialJson));
-        this.state = {
-          dbJson: this.json,
-          photos: [null],
-          file: null,
-          formKey: Date.now(),
+    this.state = {
+      dbJson: this.json,
+      photos: [null],
+      file: null,
+      formKey: Date.now(),
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -61,7 +61,6 @@ export default class AddDS extends React.Component {
       this.uploadFileToServer();
       this.cleanState();
     }
-    
   }
 
   cleanState() {
@@ -72,15 +71,18 @@ export default class AddDS extends React.Component {
       s.classList.add("selectionImg");
     });
 
-   this.setState({
-       dbJson: JSON.parse(JSON.stringify(AddDS.initialJson)),
-       photos: [null],
-       file: null,
-       formKey: Date.now()
-   }, () => {
-       // log the new state to the console
-       console.log(this.state);
-   });
+    this.setState(
+      {
+        dbJson: JSON.parse(JSON.stringify(AddDS.initialJson)),
+        photos: [null],
+        file: null,
+        formKey: Date.now(),
+      },
+      () => {
+        // log the new state to the console
+        console.log(this.state);
+      }
+    );
   }
 
   uploadJSONtoServer() {
@@ -96,17 +98,21 @@ export default class AddDS extends React.Component {
   }
 
   uploadPhotosToServer() {
-    for (let i = 0; i < this.state.photos.length; i++) {
+    for (let i = 0; i < this.state.photos.length - 1; i++) {
       if (this.state.photos[i] != null) {
         this.photo = this.state.photos[i];
         const formData = new FormData();
         formData.append("photo", this.photo);
-        fetch("http://127.0.0.1:9999/postPhoto?" + new URLSearchParams({
-          name: this.state.dbJson.name.Name
-        }), {
-          method: "POST",
-          body: formData,
-        });
+        fetch(
+          "http://127.0.0.1:9999/postPhoto?" +
+            new URLSearchParams({
+              name: this.state.dbJson.name.Name,
+            }),
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
       }
     }
   }
@@ -115,47 +121,51 @@ export default class AddDS extends React.Component {
     this.file = this.state.file;
     if (this.file != null && this.state.dbJson != null) {
       const formData = new FormData();
-      formData.append("upload", this.file );
-      fetch("http://127.0.0.1:9999/postFile?" + new URLSearchParams({
-        name: this.state.dbJson.name.Name
-      }), {
-        method: "POST",
-        body: formData,
-      });
+      formData.append("upload", this.file);
+      fetch(
+        "http://127.0.0.1:9999/postFile?" +
+          new URLSearchParams({
+            name: this.state.dbJson.name.Name,
+          }),
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
     }
   }
 
   render() {
     return (
       <div className="view">
-        <InputDS edit={this.state} cleanState = {this.cleanState}></InputDS>
+        <InputDS edit={this.state} cleanState={this.cleanState}></InputDS>
         <form
-                onSubmit={this.handleSubmit}
-                action=""
-                method="post"
-                encType="multipart/form-data"
-              >
-        <input
-              type="submit"
-              value="Создать"
-              className="buttonPlaceholder"
-              onClick={this.handleSubmit}
-            ></input>
-            <input
-              type="reset"
-              value="Сбросить"
-              className="buttonReset"
-              onClick={() => {
-                this.setState({
-                  dbJson: JSON.parse(JSON.stringify(AddDS.initialJson)),
-                  photos: [null],
-                  file: null,
-                  formKey: Date.now()
-                });
-                this.cleanState();
-              }}
-            ></input>
-            </form>
+          onSubmit={this.handleSubmit}
+          action=""
+          method="post"
+          encType="multipart/form-data"
+        >
+          <input
+            type="submit"
+            value="Создать"
+            className="buttonPlaceholder"
+            onClick={this.handleSubmit}
+          ></input>
+          <input
+            type="reset"
+            value="Сбросить"
+            className="buttonReset"
+            onClick={() => {
+              this.setState({
+                dbJson: JSON.parse(JSON.stringify(AddDS.initialJson)),
+                photos: [null],
+                file: null,
+                formKey: Date.now(),
+              });
+              this.cleanState();
+            }}
+          ></input>
+        </form>
       </div>
     );
   }
