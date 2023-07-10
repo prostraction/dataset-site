@@ -42,9 +42,10 @@ body {
     font-family: "Open Sans", "Arial", sans-serif;
     font-style: normal;
     font-weight: 400;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 1.5;
 }
+
 
 .header {
     background-color: #212121;
@@ -122,7 +123,7 @@ h2 {
 .wrapper {
     min-width: 320px;
     /*max-width: 90%;*/
-    height: calc(100vh - 97px);
+    /*height: 91vh; *//*calc(100vh - 97px);*/
     margin: 0 auto;
     display: flex;
     grid-gap: 60px;
@@ -142,7 +143,7 @@ h2 {
     grid-area: sidebar;
     position: relative;
     
-    height: 100%;
+    min-height: 55em;
     width: 500px;
     padding: 0px;
     padding-top: 20px;
@@ -157,7 +158,12 @@ h2 {
 }
 
 .menu h3 {
+    font-weight: 400;
     font-size: 16px;
+}
+
+.menuCategory {
+    font-weight: 700;
 }
 
 /*.menu h2 {
@@ -186,6 +192,7 @@ h2 {
 }
 
 .menu li a {
+    font-size: 16px;
     color: var(--black);
     text-decoration: none;
 }
@@ -213,6 +220,7 @@ h2 {
     grid-area: content;
     margin: 0;
     margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .view h2 {

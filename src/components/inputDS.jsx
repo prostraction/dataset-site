@@ -137,6 +137,7 @@ export default class InputDS extends React.Component {
                       key={"img" + (i + 1)}
                       type="file"
                       className="selectionImg"
+                      style={{backgroundImage: "url(" + "http://127.0.0.1:9999/"+key[1]+")"}}
                       onChange={this.handleUploadPhoto}
                     ></input>
                   ))}

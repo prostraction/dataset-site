@@ -1,4 +1,5 @@
 import * as React from "react";
+import { BrowserRouter as Link } from "react-router-dom";
 
 export default class Menu extends React.Component {
   constructor() {
@@ -37,7 +38,7 @@ export default class Menu extends React.Component {
         <div className="menu">
           <h3>ДАТАСЕТЫ</h3>
           <ul>
-            <li>Без категории</li>
+            <li className="menuCategory">Без категории</li>
               <li>
                 <ul>
                   {Object.keys(names).map((k) => (
@@ -48,7 +49,7 @@ export default class Menu extends React.Component {
               </ul>
             </li>
             <ul>
-            <li key="addDataSet">
+            <li key="addDataSet" className="menuCategory">
               <a href={"/add"}>Добавить датасет</a>
             </li>
             </ul>

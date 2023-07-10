@@ -36,11 +36,15 @@ func (app *Application) InitFiber(port int) error {
 	app.host.fiber.Get("/status", status)
 	app.host.fiber.Get("/getDataset", app.getSet)
 	app.host.fiber.Get("/getList", app.getListOfSets)
+
+	app.host.fiber.Get("images/:s/:s", app.getImage)
+	app.host.fiber.Get("downloads/:s/:s", app.getFile)
+
 	app.host.fiber.Post("/postPhoto", app.postPhoto)
 	app.host.fiber.Post("/postFile", app.postFile)
 	app.host.fiber.Post("/postJSON", app.postJSON)
-	app.host.fiber.Put("/putPhoto", app.putPhoto)
-	app.host.fiber.Put("/putFile", app.putFile)
+	//app.host.fiber.Put("/putPhoto", app.putPhoto)
+	//app.host.fiber.Put("/putFile", app.putFile)
 	app.host.fiber.Put("/putJSON", app.putJSON)
 
 	app.log.Fatal(app.host.fiber.Listen(":" + strconv.Itoa(port)))
@@ -52,32 +56,8 @@ func status(c *fiber.Ctx) error {
 	return c.SendString(uri)
 }
 
-func (app *Application) getSet(c *fiber.Ctx) error {
-	nameSet := c.Query("name", emptyNameSet)
-	if nameSet == "" {
-		nameSet = emptyNameSet
-	}
-	if nameSet == emptyNameSet {
-		return c.Status(http.StatusUnprocessableEntity).SendString("name is required")
-	}
-	app.log.Info("Called getSet with name = ", nameSet)
-	jsonSet, err := app.db.LoadSet(nameSet)
-	if err != nil {
-		return c.Status(http.StatusBadGateway).SendString("database error" + err.Error())
-	}
-	return c.JSON(jsonSet)
-}
-
-func (app *Application) getListOfSets(c *fiber.Ctx) error {
-	jsonSet, err := app.db.LoadList()
-	if err != nil {
-		return c.Status(http.StatusBadGateway).SendString("database error" + err.Error())
-	}
-	return c.JSON(jsonSet)
-}
-
-func (app *Application) uploadHandler(c *fiber.Ctx, strType string, strPath string) error {
-	nameSet := c.Query("name", emptyNameSet)
+func (app *Application) uploadHandler(c *fiber.Ctx, strType string, strPath string, datasetName string) error {
+	nameSet := datasetName
 	nameSet = regexp.MustCompile(`[^a-zA-Z0-9.]`).ReplaceAllString(nameSet, "")
 	if len(nameSet) < 1 {
 		c.Status(http.StatusBadGateway).SendString("dataset name should contain ASCII chars")
@@ -86,6 +66,7 @@ func (app *Application) uploadHandler(c *fiber.Ctx, strType string, strPath stri
 
 	file, err := c.FormFile(strType)
 	if err != nil {
+		app.log.Info(err.Error())
 		return err
 	}
 	file.Filename = regexp.MustCompile(`[^a-zA-Z0-9.]`).ReplaceAllString(file.Filename, "")
@@ -101,21 +82,35 @@ func (app *Application) uploadHandler(c *fiber.Ctx, strType string, strPath stri
 	if err != nil {
 		return err
 	}
+	app.log.Info("Created file in: ", filepath.Join(strPath, file.Filename))
 	return nil
+}
+
+func (app *Application) deleteHandler(path string, datasetName string) error {
+	fpath := filepath.Join(path, datasetName)
+	err := os.RemoveAll(fpath)
+	return err
+}
+
+func (app *Application) moveHandler(path string, datasetName1 string, datasetName2 string) error {
+	filepath1 := filepath.Join(path, datasetName1)
+	filepath2 := filepath.Join(path, datasetName2)
+	return os.Rename(filepath1, filepath2)
 }
 
 func (app *Application) putJSON(c *fiber.Ctx) error {
-	app.log.Info("PUT called with ", c.Query("name"))
-	app.db.DeleteSet(c.Query("name"))
+	app.log.Info("PUT called with ", c.Query("oldName"))
+	app.db.DeleteSet(c.Query("oldName"))
+	fileChanged := c.Query("fileChanged")
+	oldDataset := c.Query("oldName")
+	newDataset := c.Query("newName")
+	if fileChanged == "yes" {
+		app.deleteHandler("downloads", oldDataset)
+	} else {
+		app.moveHandler("downloads", oldDataset, newDataset)
+	}
+	app.deleteHandler("images", oldDataset)
 	app.postJSON(c)
-	return nil
-}
-
-func (app *Application) putPhoto(c *fiber.Ctx) error {
-	return nil
-}
-
-func (app *Application) putFile(c *fiber.Ctx) error {
 	return nil
 }
 
@@ -123,7 +118,8 @@ func (app *Application) putFile(c *fiber.Ctx) error {
 // makes new folder "images/{dataset_name}" and
 // put received file to it
 func (app *Application) postPhoto(c *fiber.Ctx) error {
-	err := app.uploadHandler(c, "photo", "images")
+	name := c.Query("name", emptyNameSet)
+	err := app.uploadHandler(c, "photo", "images", name)
 	if err != nil {
 		app.log.Info(err)
 	}
@@ -134,7 +130,8 @@ func (app *Application) postPhoto(c *fiber.Ctx) error {
 // makes new folder "downloads/{dataset_name}" and
 // put received file to it
 func (app *Application) postFile(c *fiber.Ctx) error {
-	err := app.uploadHandler(c, "upload", "downloads")
+	name := c.Query("name", emptyNameSet)
+	err := app.uploadHandler(c, "upload", "downloads", name)
 	if err != nil {
 		app.log.Info(err)
 	}

@@ -6,6 +6,7 @@ export default class View extends React.Component {
         super();
         this.state = {
             dbJson: null,
+            dbJsonOld: null,
             photos: [null],
             file: null,
             oldDatasetName: null,
@@ -27,6 +28,7 @@ export default class View extends React.Component {
             .then((json) => {
                 this.setState({
                     dbJson: json,
+                    dbJsonOld: JSON.parse(JSON.stringify(json)),
                     oldDatasetName: json.name.Name,
                     isLoaded: true,
                 })
@@ -48,10 +50,16 @@ export default class View extends React.Component {
 
     editToggle(firstOpen) {
         if (firstOpen) {
+            this.photos = [];
+            Object.entries(this.state.dbJson.imagePreviewName).map((key) => (
+                this.photos.push("images/" + this.state.dbJsonOld.name.Name + "/" + key[1].Value)
+            ));
+            this.photos.push("images/_/add.svg");
             this.backupState = JSON.parse(JSON.stringify(this.state));
             this.backupState.cancelledState = null;
             this.editing = this.state.isEditing
             this.setState({
+                photos: this.photos,
                 cancelledState: this.backupState,
                 isEditing: !this.editing
             });
@@ -67,17 +75,24 @@ export default class View extends React.Component {
                 isEditing: !this.editing
             })
         }
-        console.log(this.state);
     }
 
     updateJSONtoServer() {
         if (this.state.dbJson != null) {
+            this.fileChanged = (this.state.file === null) ? "no" : "yes";
+            console.log(this.fileChanged, this.file)
             fetch("http://127.0.0.1:9999/putJSON?" + new URLSearchParams({
-                name: this.state.oldDatasetName,
+                oldName: this.state.dbJsonOld.name.Name,
+                newName: this.state.dbJson.name.Name,
+                fileChanged: this.fileChanged
             }), {
               method: "PUT",
               body: JSON.stringify(this.state.dbJson),
               headers: new Headers({ "Content-Type": "application/json" }),
+            })
+            .then(() => {
+                this.updateFileToServer();
+                this.updatePhotosToServer();
             });
             return true;
           }
@@ -85,15 +100,48 @@ export default class View extends React.Component {
     }
 
     updatePhotosToServer() {
-
+        for (let i = 0; i < this.state.photos.length; i++) {
+            if (this.state.photos[i] !== null) {
+              this.photo = this.state.photos[i];
+              const formData = new FormData();
+              formData.append("photo", this.photo);
+              fetch("http://127.0.0.1:9999/postPhoto?" + new URLSearchParams({
+                name: this.state.dbJson.name.Name,
+              }), {
+                method: "POST",
+                body: formData,
+              });
+            }
+          }
     }
 
     updateFileToServer() {
-
+        this.file = this.state.file;
+        if (this.file != null && this.state.dbJson != null) {
+          const formData = new FormData();
+          formData.append("upload", this.file );
+          fetch("http://127.0.0.1:9999/postFile?" + new URLSearchParams({
+            name: this.state.dbJson.name.Name
+          }), {
+            method: "POST",
+            body: formData,
+          });
+        }
     }
 
     handleSubmit() {
-        this.updateJSONtoServer();
+        if (this.updateJSONtoServer()) {
+            //this.updatePhotosToServer();
+
+            if (this.state.dbJson.name.Name === this.state.oldDatasetName) {
+                this.editing = this.state.isEditing
+                this.setState({
+                    isEditing: !this.editing
+                });
+            } else {
+                /* force redirect */
+            }
+        }
     }
 
     render() {
@@ -131,7 +179,7 @@ export default class View extends React.Component {
                             <h2>{dbJson.name.Value}</h2>
                             <div className="imagesPreview">
                                 {Object.entries(dbJson.imagePreviewName).map((key) => (
-                                        <img key={key[1].Name} alt={key[1].Name} src={key[1].Value} height="300" width="300"></img>
+                                        <img key={key[1].Name} alt={key[1].Name} src={"http://127.0.0.1:9999/images/" + this.state.dbJsonOld.name.Name + "/" + key[1].Value} height="300" width="300"></img>
                                     ))}
                             </div>
                             <ul>
@@ -141,7 +189,7 @@ export default class View extends React.Component {
                                 ))}
                             </ul>
                             <button>
-                                <a href = {dbJson.downloadLink.Value}>{dbJson.downloadLink.Name}</a>
+                                <a href = {"http://127.0.0.1:9999/downloads/" + dbJson.name.Name + "/" + dbJson.downloadLink.Value}>{dbJson.downloadLink.Name}</a>
                             </button>
                             <p></p>
                             <button onClick={() => {
