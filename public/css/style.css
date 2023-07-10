@@ -100,11 +100,14 @@ body {
 }
 
 footer {
-    position: relative;
+    /*display: none;*/ /* until it fixed */
+    position: fixed;
     background-color: #212121;
     color: var(--white);
     margin: 0;
     padding: 0;
+    top: 96%;
+    min-width: 100%;
 }
 
 /* logo */
@@ -221,6 +224,24 @@ h2 {
     margin: 0;
     margin-top: 20px;
     margin-bottom: 20px;
+    padding-bottom: 40px;
+}
+
+.view ul {
+    padding: 0;
+   
+    list-style-type: none;
+}
+
+.view ul > li {
+    margin: 1rem 0;
+    height: 2rem;
+    line-height: 2rem;
+    left: -1rem;
+    text-align: center;
+    border-radius: 0.5rem 0.5rem 0.5rem 0.5rem;
+    box-shadow: 0.15rem 0.15rem 0.6rem rgba(0,0,0,0.15), 0 0.5rem 1.125rem rgba(146, 145, 145, 0);
+
 }
 
 .view h2 {
@@ -379,6 +400,32 @@ input {
     border: 1px solid var(--green);
     color: transparent;
     text-indent: -9999px;
+}
+
+.auth {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    text-align: center;
+    transform: translate(-50%, -50%);
+}
+
+.auth p {
+    margin-bottom: 30px;
+}
+
+.auth > form > ul > li {
+    width: 200px;
+}
+
+.auth > form > ul > li > input {
+    border: none;
+}
+
+.auth > form > ul > button {
+    margin-top: 20px;
+    width: 200px;
 }
 
 @media screen and (max-width: 1400px) {
