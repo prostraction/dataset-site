@@ -88,86 +88,61 @@ export default class View extends React.Component {
   }
 
   updateJSONtoServer() {
+    const formData = new FormData();
     if (this.state.dbJson != null) {
       this.fileChanged = this.state.file === null ? "no" : "yes";
-      console.log(this.fileChanged, this.file);
-      fetch(
-        "http://127.0.0.1:9999/putJSON?" +
-          new URLSearchParams({
-            oldName: this.state.dbJsonOld.name.Name,
-            newName: this.state.dbJson.name.Name,
-            fileChanged: this.fileChanged,
-          }),
-        {
-          method: "PUT",
-          body: JSON.stringify(this.state.dbJson),
-          headers: new Headers({ "Content-Type": "application/json" }),
-        }
-      ).then(() => {
-        this.updateFileToServer();
-        this.updatePhotosToServer();
+
+      /* Images */
+      for (let i = 0; i < this.state.photos.length - 1; i++) {
+          if (this.state.photos[i] != null && typeof(this.state.photos[i]) === "object") {
+            this.photo = this.state.photos[i];
+            formData.append("photo", this.photo);
+          }
+     }
+
+      /* File */
+     if (this.state.file != null) {
+        formData.append("upload", this.state.file);
+      }
+
+      formData.append("jsonDB", JSON.stringify(this.state.dbJson))
+
+      fetch("http://127.0.0.1:9999/putJSON?" +
+      new URLSearchParams({
+        oldName: this.state.dbJsonOld.name.Name,
+        newName: this.state.dbJson.name.Name,
+        fileChanged: this.fileChanged,
+      }), {
+        method: "PUT",
+        body: formData,
+        headers: new Headers({
+          "Accept": "application/json",
+          "type": "formData"
+        }),
+      })
+      .then(() => {
+        if (this.state.dbJson.name.Name === this.state.oldDatasetName) {
+            this.editing = this.state.isEditing;
+            this.setState({
+              isEditing: !this.editing,
+            });
+          } else {
+            // force redirect
+          }
+      })
+      .catch((error) => {
+        alert(error)
       });
       return true;
     }
     return false;
   }
 
-  updatePhotosToServer() {
-    for (let i = 0; i < this.state.photos.length - 1; i++) {
-      if (this.state.photos[i] !== null) {
-        this.photo = this.state.photos[i];
-        this.url = URL.createObjectURL(this.photo);
-        const formData = new FormData();
-        formData.append("photo", this.photo);
-        fetch(
-          "http://127.0.0.1:9999/postPhoto?" +
-            new URLSearchParams({
-              name: this.state.dbJson.name.Name,
-            }),
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
-      }
-    }
-  }
-
-  updateFileToServer() {
-    this.file = this.state.file;
-    if (this.file != null && this.state.dbJson != null) {
-      const formData = new FormData();
-      formData.append("upload", this.file);
-      fetch(
-        "http://127.0.0.1:9999/postFile?" +
-          new URLSearchParams({
-            name: this.state.dbJson.name.Name,
-          }),
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-    }
-  }
-
   handleSubmit() {
-    if (this.updateJSONtoServer()) {
-      //this.updatePhotosToServer();
-
-      if (this.state.dbJson.name.Name === this.state.oldDatasetName) {
-        this.editing = this.state.isEditing;
-        this.setState({
-          isEditing: !this.editing,
-        });
-      } else {
-        /* force redirect */
-      }
-    }
+    this.updateJSONtoServer()
   }
 
   render() {
-    const idName = window.location.href.split("/")[4];
     const { dbJson, isLoaded, isEditing } = this.state;
     if (!isLoaded) {
       return (

@@ -159,11 +159,11 @@ func (db *Database) LoadSetListCache() {
 	db.LoadList()
 }
 
-func (db *Database) GetCachedSet(name string) (val Set, err bool) {
+func (db *Database) GetCachedSet(name string) (val Set, ok bool) {
 	if db.cacheSet == nil {
 		db.InitCache()
 	}
-	val, ok := db.cacheSet[name]
+	val, ok = db.cacheSet[name]
 	return val, ok
 }
 

@@ -7,7 +7,7 @@ export default class AddDS extends React.Component {
     this.json = JSON.parse(JSON.stringify(AddDS.initialJson));
     this.state = {
       dbJson: this.json,
-      photos: [null],
+      photos: ["images/_/add.svg"],
       file: null,
       formKey: Date.now(),
     };
@@ -56,11 +56,7 @@ export default class AddDS extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    if (this.uploadJSONtoServer()) {
-      this.uploadPhotosToServer();
-      this.uploadFileToServer();
-      this.cleanState();
-    }
+    this.uploadJSONtoServer();
   }
 
   cleanState() {
@@ -74,7 +70,7 @@ export default class AddDS extends React.Component {
     this.setState(
       {
         dbJson: JSON.parse(JSON.stringify(AddDS.initialJson)),
-        photos: [null],
+        photos: ["images/_/add.svg"],
         file: null,
         formKey: Date.now(),
       },
@@ -86,53 +82,41 @@ export default class AddDS extends React.Component {
   }
 
   uploadJSONtoServer() {
+    const formData = new FormData();
     if (this.state.dbJson != null) {
+
+      /* Images */
+      for (let i = 0; i < this.state.photos.length - 1; i++) {
+        if (this.state.photos[i] != null) {
+          this.photo = this.state.photos[i];
+          formData.append("photo", this.photo);
+        }
+      }
+
+      /* File */
+      this.file = this.state.file;
+      if (this.file != null) {
+        formData.append("upload", this.file);
+      }
+
+      formData.append("jsonDB", JSON.stringify(this.state.dbJson))
+        
       fetch("http://127.0.0.1:9999/postJSON", {
         method: "POST",
-        body: JSON.stringify(this.state.dbJson),
-        headers: new Headers({ "Content-Type": "application/json" }),
+        body: formData,
+        headers: new Headers({
+          "Accept": "application/json",
+          "type": "formData"
+        }),
+      })
+      .then(() => {
+        this.cleanState();
+      }).catch((error) => {
+        alert(error);
       });
       return true;
     }
     return false;
-  }
-
-  uploadPhotosToServer() {
-    for (let i = 0; i < this.state.photos.length - 1; i++) {
-      if (this.state.photos[i] != null) {
-        this.photo = this.state.photos[i];
-        const formData = new FormData();
-        formData.append("photo", this.photo);
-        fetch(
-          "http://127.0.0.1:9999/postPhoto?" +
-            new URLSearchParams({
-              name: this.state.dbJson.name.Name,
-            }),
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
-      }
-    }
-  }
-
-  uploadFileToServer() {
-    this.file = this.state.file;
-    if (this.file != null && this.state.dbJson != null) {
-      const formData = new FormData();
-      formData.append("upload", this.file);
-      fetch(
-        "http://127.0.0.1:9999/postFile?" +
-          new URLSearchParams({
-            name: this.state.dbJson.name.Name,
-          }),
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-    }
   }
 
   render() {
