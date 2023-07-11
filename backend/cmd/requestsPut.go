@@ -3,7 +3,6 @@ package main
 import (
 	"dataset/internal/db"
 	"encoding/json"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -44,7 +43,7 @@ func (app *Application) putJSON(c *fiber.Ctx) error {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		imageList, err := ioutil.ReadDir(filepath.Join("images", oldDataset))
+		imageList, err := os.ReadDir(filepath.Join("images", oldDataset))
 		if err == nil {
 			for _, k := range imageList {
 				datasetPath := filepath.Join("images", oldDataset)
@@ -57,7 +56,7 @@ func (app *Application) putJSON(c *fiber.Ctx) error {
 		}
 	}()
 
-	fileList, err := ioutil.ReadDir(filepath.Join("downloads", oldDataset))
+	fileList, err := os.ReadDir(filepath.Join("downloads", oldDataset))
 	wg.Add(1)
 	go func() {
 		defer wg.Done()

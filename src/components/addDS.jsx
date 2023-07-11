@@ -19,6 +19,14 @@ export default class AddDS extends React.Component {
       Name: "Dataset name",
       Value: "Название датасета",
     },
+    category: {
+      Name: "Категория",
+      Value: "none",
+    },
+    description: {
+      Name: "Description",
+      Value: "",
+    },
     date: {
       Name: "Обновлено ",
       Value: "01.01.1970",

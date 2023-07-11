@@ -49,7 +49,6 @@ export default class InputDS extends React.Component {
 
     edit.dbJson = this.json;
     edit.photos = this.photos;
-    console.log(this.props.edit)
     this.forceUpdate();
     //this.setState({
     //  dbJson: this.json,
@@ -98,6 +97,8 @@ export default class InputDS extends React.Component {
             return false;
           case "downloadLink":
             return false;
+           case "desctription":
+            return false;
           default:
             return true;
         }
@@ -142,6 +143,15 @@ export default class InputDS extends React.Component {
                     ></input>
                   ))}
                 </div>
+                <br></br>
+                Описание:
+                <br></br>
+                <input
+                  type="text"
+                  name="name,Value"
+                  placeholder={edit.dbJson.description.Value}
+                  onChange={this.handleChange}
+                ></input>
                 <ul>
                   <li>
                     <input

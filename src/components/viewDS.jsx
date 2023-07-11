@@ -51,6 +51,8 @@ export default class View extends React.Component {
         return false;
       case "downloadLink":
         return false;
+       case "desctription":
+        return false;
       default:
         return true;
     }
@@ -194,7 +196,7 @@ export default class View extends React.Component {
               </div>
               
               <div className="descripton">
-              <p>Возможно какое-то описание...</p>
+              <p>{dbJson.desctription.Value}</p>
               </div>
               <div className="actions">
               <button>
@@ -230,8 +232,6 @@ export default class View extends React.Component {
                     </li>
                   ))}
               </ul>
-              
-              
             </div>
           </div>
         );
