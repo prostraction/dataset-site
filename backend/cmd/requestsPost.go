@@ -11,11 +11,11 @@ import (
 func (app *Application) postJSON(c *fiber.Ctx) error {
 	var set db.Set
 	if err := json.Unmarshal([]byte(c.FormValue("jsonDB")), &set); err != nil {
-		return c.Status(http.StatusBadRequest).SendString("json parsing error")
+		return c.Status(http.StatusInternalServerError).SendString("json parsing error")
 	}
 	if err := app.uploadHandler(c, set); err != nil {
 		app.log.Info("postJSON: ", err.Error())
 		return c.Status(http.StatusInternalServerError).SendString(err.Error())
 	}
-	return c.Status(http.StatusCreated).SendString("")
+	return c.SendStatus(http.StatusCreated)
 }

@@ -17,7 +17,7 @@ func (app *Application) putJSON(c *fiber.Ctx) error {
 		oldDataset = emptyNameSet
 	}
 	if oldDataset == emptyNameSet {
-		return c.Status(http.StatusBadRequest).SendString("oldName required")
+		return c.Status(http.StatusInternalServerError).SendString("oldName required")
 	}
 	newDataset := c.Query("newName", emptyNameSet)
 	if newDataset == "" {
@@ -28,7 +28,7 @@ func (app *Application) putJSON(c *fiber.Ctx) error {
 	}
 	var set db.Set
 	if err := json.Unmarshal([]byte(c.FormValue("jsonDB")), &set); err != nil {
-		return c.Status(http.StatusBadRequest).SendString("json parsing error")
+		return c.Status(http.StatusInternalServerError).SendString("json parsing error")
 	}
 
 	/* remove image / files not in db */
@@ -40,10 +40,10 @@ func (app *Application) putJSON(c *fiber.Ctx) error {
 	files[set.DownloadLink.Value.(string)] = true
 
 	var wg sync.WaitGroup
+	imageList, err := os.ReadDir(filepath.Join("images", oldDataset))
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		imageList, err := os.ReadDir(filepath.Join("images", oldDataset))
 		if err == nil {
 			for _, k := range imageList {
 				datasetPath := filepath.Join("images", oldDataset)
@@ -77,11 +77,11 @@ func (app *Application) putJSON(c *fiber.Ctx) error {
 		app.moveHandler("downloads", oldDataset, newDataset)
 	}
 	/* upload files */
-	app.db.DeleteSet(c.Query("oldName"))
+	app.db.DeleteSet(oldDataset)
 
 	if err := app.uploadHandler(c, set); err != nil {
 		app.log.Info("putJSON: ", err.Error())
 		return c.Status(http.StatusInternalServerError).SendString(err.Error())
 	}
-	return c.Status(http.StatusAccepted).SendString("")
+	return c.SendStatus(http.StatusAccepted)
 }

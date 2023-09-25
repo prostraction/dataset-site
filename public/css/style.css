@@ -44,6 +44,7 @@ body {
     font-weight: 400;
     font-size: 16px;
     line-height: 1.5;
+    min-height: 100vh !important;
 }
 
 
@@ -101,12 +102,11 @@ body {
 
 footer {
     /*display: none;*/ /* until it fixed */
-    position: fixed;
+    position: absolute;
     background-color: #212121;
     color: var(--white);
     margin: 0;
     padding: 0;
-    top: 96%;
     min-width: 100%;
 }
 
@@ -145,8 +145,9 @@ h2 {
 .menu {
     grid-area: sidebar;
     position: relative;
+    display: block;
     
-    min-height: 55em;
+    min-height: 100vh;
     width: 500px;
     padding: 0px;
     padding-top: 20px;
@@ -223,7 +224,7 @@ h2 {
     border-bottom: 1px solid grey;
 }*/
 
-.view {
+.view { 
     grid-area: content;
     margin: 0;
     margin-top: 20px;
@@ -231,13 +232,12 @@ h2 {
     padding-bottom: 40px;
 }
 
-.view ul {
+.view ul, .auth ul {
     padding: 0;
-   
     list-style-type: none;
 }
 
-.view ul > li {
+.view ul > li, .auth ul > li {
     margin: 1rem 0;
     height: 2rem;
     line-height: 2rem;
@@ -245,7 +245,6 @@ h2 {
     text-align: center;
     border-radius: 0.5rem 0.5rem 0.5rem 0.5rem;
     box-shadow: 0.15rem 0.15rem 0.6rem rgba(0,0,0,0.15), 0 0.5rem 1.125rem rgba(146, 145, 145, 0);
-
 }
 
 .view h2 {
@@ -358,20 +357,14 @@ input {
     margin-bottom: 5px;
 }
 
-.bigPlaceholder {
-    max-width: 300px;
+.rowEdit {
+    display: grid;
+    grid-auto-flow: column;
+    grid-column-gap: 10px;
 }
 
-.mediumPlaceholder {
-    max-width: 140px;
-}
-
-.smallPlaceholder {
-    max-width: 120px;
-}
-
-.tinyPlaceholder {
-    max-width: 63px;
+.rowEdit > input {
+    border: 1px dashed;
 }
 
 
@@ -407,12 +400,12 @@ input {
 }
 
 .auth {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
+    display: block;
+    position: relative;
     text-align: center;
-    transform: translate(-50%, -50%);
+    margin: auto;
+    padding-top: 33vh;
+    padding-bottom: 33vh;
 }
 
 .auth p {

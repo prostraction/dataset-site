@@ -97,7 +97,7 @@ export default class InputDS extends React.Component {
             return false;
           case "downloadLink":
             return false;
-           case "desctription":
+           case "description":
             return false;
           default:
             return true;
@@ -108,6 +108,7 @@ export default class InputDS extends React.Component {
         const {edit} = this.props;
         console.log(this.props)
         console.log("props: ", edit)
+
         return (
             <div className="view">
             <div className="view-wrapper">
@@ -138,7 +139,7 @@ export default class InputDS extends React.Component {
                       key={"img" + (i + 1)}
                       type="file"
                       className="selectionImg"
-                      style={{backgroundImage: "url(" + "http://127.0.0.1:9999/"+key[1]+")"}}
+                      style={{backgroundImage: "url(http://127.0.0.1:9999/"+key[1]+")"}}
                       onChange={this.handleUploadPhoto}
                     ></input>
                   ))}
@@ -149,11 +150,11 @@ export default class InputDS extends React.Component {
                 <input
                   type="text"
                   name="name,Value"
-                  placeholder={edit.dbJson.description.Value}
+                  placeholder={edit.dbJson.description ? edit.dbJson.description.Value : ""}
                   onChange={this.handleChange}
                 ></input>
                 <ul>
-                  <li>
+                  <li className="rowEdit">
                     <input
                       type="text"
                       name="date,Name"
@@ -189,7 +190,7 @@ export default class InputDS extends React.Component {
                   {Object.entries(edit.dbJson)
                     .filter(([k, _]) => this.readableData(k))
                     .map((key) => (
-                      <li key={key[0]}>
+                      <li key={key[0]} className="rowEdit">
                         <input
                           type="text"
                           name={key[0] + ",Name"}

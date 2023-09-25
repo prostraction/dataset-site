@@ -7,7 +7,7 @@ type ListOfSets struct {
 type Set struct {
 	Name             Detail   `json:"name"`
 	Category         Detail   `json:"category"`
-	Description      Detail   `json:"desctription"`
+	Description      Detail   `json:"description"`
 	Date             Detail   `json:"date"`
 	Time             Detail   `json:"time"`
 	Count            Detail   `json:"count"`

@@ -4,7 +4,6 @@ export default class SignIn extends React.Component {
 
     render() {
         return(
-            <div className="view">
                 <div className="auth">
                     <p><strong>Авторизация</strong></p>
                     <form>
@@ -15,7 +14,6 @@ export default class SignIn extends React.Component {
                         </ul>
                     </form>
                 </div>
-            </div>
         )
     }
 }

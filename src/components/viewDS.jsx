@@ -51,7 +51,9 @@ export default class View extends React.Component {
         return false;
       case "downloadLink":
         return false;
-       case "desctription":
+      case "description":
+        return false;
+      case "category":
         return false;
       default:
         return true;
@@ -96,56 +98,68 @@ export default class View extends React.Component {
 
       /* Images */
       for (let i = 0; i < this.state.photos.length - 1; i++) {
-          if (this.state.photos[i] != null && typeof(this.state.photos[i]) === "object") {
-            this.photo = this.state.photos[i];
-            formData.append("photo", this.photo);
-          }
-     }
+        if (
+          this.state.photos[i] != null &&
+          typeof this.state.photos[i] === "object"
+        ) {
+          this.photo = this.state.photos[i];
+          formData.append("photo", this.photo);
+        }
+      }
 
       /* File */
-     if (this.state.file != null) {
+      if (this.state.file != null) {
         formData.append("upload", this.state.file);
       }
 
-      formData.append("jsonDB", JSON.stringify(this.state.dbJson))
+      /* Database */
+      formData.append("jsonDB", JSON.stringify(this.state.dbJson));
 
-      fetch("http://127.0.0.1:9999/putJSON?" +
-      new URLSearchParams({
-        oldName: this.state.dbJsonOld.name.Name,
-        newName: this.state.dbJson.name.Name,
-        fileChanged: this.fileChanged,
-      }), {
-        method: "PUT",
-        body: formData,
-        headers: new Headers({
-          "Accept": "application/json",
-          "type": "formData"
-        }),
-      })
-      .then(() => {
-        if (this.state.dbJson.name.Name === this.state.oldDatasetName) {
-            this.editing = this.state.isEditing;
-            this.setState({
-              isEditing: !this.editing,
-            });
-          } else {
-            // force redirect
-          }
-      })
-      .catch((error) => {
-        alert(error)
-      });
+      fetch(
+        "http://127.0.0.1:9999/putJSON?" +
+          new URLSearchParams({
+            oldName: this.state.dbJsonOld.name.Name,
+            newName: this.state.dbJson.name.Name,
+            fileChanged: this.fileChanged,
+          }),
+        {
+          method: "PUT",
+          body: formData,
+          headers: new Headers({
+            Accept: "application/json",
+            type: "formData",
+          }),
+        }
+      )
+        .then(() => {
+            this.editEdded();
+        })
+        .catch((error) => {
+          alert(error);
+        });
       return true;
     }
     return false;
   }
 
   handleSubmit() {
-    this.updateJSONtoServer()
+    this.updateJSONtoServer();
+  }
+
+  editEdded() {
+    if (this.state.dbJson.name.Name === this.state.oldDatasetName) {
+        this.editing = this.state.isEditing;
+        this.setState({
+          isEditing: !this.editing,
+        });
+      } else {
+        // force redirect
+      }
   }
 
   render() {
     const { dbJson, isLoaded, isEditing } = this.state;
+    console.log(dbJson);
     if (!isLoaded) {
       return (
         <div className="view">
@@ -194,30 +208,30 @@ export default class View extends React.Component {
                   ></img>
                 ))}
               </div>
-              
-              <div className="descripton">
-              <p>{dbJson.desctription.Value}</p>
+
+              <div className="description">
+                <p>{dbJson.description ? dbJson.description.Value : ""}</p>
               </div>
               <div className="actions">
-              <button>
-                <a
-                  href={
-                    "http://127.0.0.1:9999/downloads/" +
-                    dbJson.name.Name +
-                    "/" +
-                    dbJson.downloadLink.Value
-                  }
+                <button>
+                  <a
+                    href={
+                      "http://127.0.0.1:9999/downloads/" +
+                      dbJson.name.Name +
+                      "/" +
+                      dbJson.downloadLink.Value
+                    }
+                  >
+                    {"Скачать"}
+                  </a>
+                </button>
+                <button
+                  onClick={() => {
+                    this.editToggle(true);
+                  }}
                 >
-                  {"Скачать"}
-                </a>
-              </button>
-              <button
-                onClick={() => {
-                  this.editToggle(true);
-                }}
-              >
-                Редактировать
-              </button>
+                  Редактировать
+                </button>
               </div>
               <ul>
                 <li key={"dbJson datetime"}>
