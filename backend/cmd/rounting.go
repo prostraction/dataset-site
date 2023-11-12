@@ -3,7 +3,6 @@ package main
 import (
 	"os"
 	"strconv"
-	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -16,15 +15,17 @@ type HostRoutes struct {
 const emptyNameSet = "unknown"
 
 func (app *Application) InitFiber(port int) error {
-	app.host.fiber = fiber.New()
+	app.host.fiber = fiber.New(fiber.Config{
+		BodyLimit: 2048 * 1024 * 1024,
+	})
 	app.host.fiber.Use(cors.New(cors.Config{
 		AllowOrigins: "*", // rename
 		AllowHeaders: "*", //"Origin, Content-Type, Accept, Type, Fetch",
-		AllowMethods: strings.Join([]string{
+		/*AllowMethods: strings.Join([]string{
 			fiber.MethodGet,
 			fiber.MethodPost,
 			fiber.MethodPut,
-		}, ","),
+		}, ","),*/
 	}))
 
 	app.host.fiber.Get("/status", status)

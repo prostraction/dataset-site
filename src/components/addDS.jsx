@@ -108,12 +108,13 @@ export default class AddDS extends React.Component {
       }
 
       formData.append("jsonDB", JSON.stringify(this.state.dbJson))
+      console.log(formData);
         
-      fetch("http://127.0.0.1:9999/postJSON", {
+      fetch("http://127.0.0.1:9999/postJSON/", {
         method: "POST",
         body: formData,
         headers: new Headers({
-          "Accept": "application/json",
+          "Accept": "*",  // application/json
           "type": "formData"
         }),
       })

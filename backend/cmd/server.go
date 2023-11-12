@@ -30,7 +30,7 @@ func main() {
 		app.log.Fatal("Error loading .env file")
 		os.Exit(1)
 	}
-	err = app.db.InitDatabase(uri, "dataset", "datasets")
+	err = app.db.InitDatabase(uri, "datasets", "datasets")
 	if err != nil {
 		app.log.Fatal(err)
 		os.Exit(1)
