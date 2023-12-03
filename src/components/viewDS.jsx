@@ -114,6 +114,7 @@ export default class View extends React.Component {
 
       /* Database */
       formData.append("jsonDB", JSON.stringify(this.state.dbJson));
+      const accessToken = localStorage.getItem("access_token");
 
       fetch(
         "http://127.0.0.1:9999/putJSON?" +
@@ -126,6 +127,7 @@ export default class View extends React.Component {
           method: "PUT",
           body: formData,
           headers: new Headers({
+            Authorization: `Bearer ${accessToken}`,
             Accept: "application/json",
             type: "formData",
           }),

@@ -2,7 +2,9 @@ package db
 
 import (
 	"context"
+	s "dataset/internal/structs"
 	"errors"
+	"fmt"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -10,25 +12,31 @@ import (
 )
 
 type Database struct {
-	opts       *options.ClientOptions
-	con        *mongo.Client
-	uri        string
-	name       string
-	collection string
+	opts              *options.ClientOptions
+	con               *mongo.Client
+	uri               string
+	nameDataset       string
+	nameAdmin         string
+	collectionDataset string
+	collectionAdmin   string
 
 	cacheList []ListOfSets
 	cacheSet  map[string]Set
 }
 
-func (db *Database) InitDatabase(uri string, name string, collection string) (err error) {
+func (db *Database) InitDatabase(uri string, nameDataset string, collectionDataset string, nameAdmin string, collectionAdmin string, mode bool) (err error) {
 	db.uri = uri
-	db.name = name
-	db.collection = collection
+	db.nameDataset = nameDataset
+	db.collectionDataset = collectionDataset
+	db.nameAdmin = nameAdmin
+	db.collectionAdmin = collectionAdmin
 
-	db.InitCache()
+	if !mode {
+		db.InitCache()
+	}
 
-	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
-	db.opts = options.Client().ApplyURI(db.uri).SetServerAPIOptions(serverAPI)
+	//serverAPI := options.ServerAPI(options.ServerAPIVersion1).SetStrict(true).SetDeprecationErrors(true)
+	db.opts = options.Client().ApplyURI(db.uri) //.SetServerAPIOptions(serverAPI)
 	db.con, err = mongo.Connect(context.Background(), db.opts)
 
 	if err != nil {
@@ -38,7 +46,7 @@ func (db *Database) InitDatabase(uri string, name string, collection string) (er
 
 	// Send a ping to confirm a successful connection
 	var result bson.M
-	if err := db.con.Database(db.name).RunCommand(context.TODO(), bson.D{{Key: "ping", Value: 1}}).Decode(&result); err != nil {
+	if err := db.con.Database(db.collectionDataset).RunCommand(context.TODO(), bson.D{{Key: "ping", Value: 1}}).Decode(&result); err != nil {
 		return err
 	}
 
@@ -54,7 +62,32 @@ func (db *Database) Disconnect() (err error) {
 	return db.con.Disconnect(context.Background())
 }
 
-
+func (db *Database) LoadUsers() (users map[string]s.User, err error) {
+	result := make(map[string]s.User)
+	db.con, err = mongo.Connect(context.Background(), db.opts)
+	if db.con == nil {
+		fmt.Println("Init connection before LoadUsers()")
+		return
+	}
+	defer db.Disconnect()
+	collection := db.con.Database(db.nameAdmin).Collection(db.collectionAdmin)
+	cursor, err := collection.Find(context.Background(), bson.D{})
+	if err != nil {
+		return result, err
+	}
+	for cursor.Next(context.Background()) {
+		var u s.User
+		if err := cursor.Decode(&u); err != nil {
+			return result, err
+		}
+		fmt.Println(u)
+		result[u.Login] = u
+	}
+	if err := cursor.Err(); err != nil {
+		return result, err
+	}
+	return result, nil
+}
 
 func (db *Database) LoadSet(name string) (Set, error) {
 	if val, ok := db.GetCachedSet(name); ok {
@@ -67,7 +100,7 @@ func (db *Database) LoadSet(name string) (Set, error) {
 	defer db.Disconnect()
 
 	var result Set
-	collection := db.con.Database(db.name).Collection(db.collection)
+	collection := db.con.Database(db.nameDataset).Collection(db.collectionDataset)
 	filter := bson.D{{Key: "name.name", Value: name}}
 	err := collection.FindOne(context.Background(), filter).Decode(&result)
 	if err != nil {
@@ -90,7 +123,7 @@ func (db *Database) LoadList() ([]ListOfSets, error) {
 	defer db.Disconnect()
 
 	var result []ListOfSets
-	collection := db.con.Database(db.name).Collection(db.collection)
+	collection := db.con.Database(db.nameDataset).Collection(db.collectionDataset)
 	cursor, err := collection.Find(context.Background(), bson.D{})
 	if err != nil {
 		return []ListOfSets{}, err
@@ -121,7 +154,7 @@ func (db *Database) PushSet(set Set) error {
 	}
 	defer db.Disconnect()
 
-	collection := db.con.Database(db.name).Collection(db.collection)
+	collection := db.con.Database(db.nameDataset).Collection(db.collectionDataset)
 	_, err := collection.InsertOne(context.Background(), set)
 	db.LoadSetListCache()
 	return err
@@ -133,11 +166,15 @@ func (db *Database) DeleteSet(name string) error {
 	}
 	defer db.Disconnect()
 
-	collection := db.con.Database(db.name).Collection(db.collection)
+	collection := db.con.Database(db.nameDataset).Collection(db.collectionDataset)
+	fmt.Println(db.uri, " ", db.nameDataset, " ", db.collectionDataset)
 	filter := bson.D{{Key: "name.name", Value: name}}
-	opts := options.Delete().SetHint(bson.D{{Key: "_id", Value: 1}})
-	_, err := collection.DeleteMany(context.Background(), filter, opts)
+	fmt.Printf("Filter: %+v\n", filter)
+	opts := options.Delete()
+	test, err := collection.DeleteMany(context.Background(), filter, opts)
+	fmt.Println(test, " on ", name)
 	if err != nil {
+		fmt.Printf("Error in deletion: %v\n", err)
 		return err
 	}
 	db.LoadSetListCache()

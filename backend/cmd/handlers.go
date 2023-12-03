@@ -47,7 +47,7 @@ func (app *Application) uploadHandler(c *fiber.Ctx, set db.Set) error {
 				set.DownloadLink.Value = str
 			}
 		}
-		if err := app.db.PushSet(set); err != nil {
+		if err := app.dbAdmin.PushSet(set); err != nil {
 			return err
 		}
 

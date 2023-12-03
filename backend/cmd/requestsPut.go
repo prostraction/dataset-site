@@ -12,6 +12,12 @@ import (
 )
 
 func (app *Application) putJSON(c *fiber.Ctx) error {
+	if err := app.validateJWT(c); err != nil {
+		return c.Status(http.StatusUnauthorized).SendString(err.Error())
+	}
+
+	app.log.Info("here")
+
 	oldDataset := c.Query("oldName", emptyNameSet)
 	if oldDataset == "" {
 		oldDataset = emptyNameSet
@@ -77,7 +83,7 @@ func (app *Application) putJSON(c *fiber.Ctx) error {
 		app.moveHandler("downloads", oldDataset, newDataset)
 	}
 	/* upload files */
-	app.db.DeleteSet(oldDataset)
+	app.dbAdmin.DeleteSet(oldDataset)
 
 	if err := app.uploadHandler(c, set); err != nil {
 		app.log.Info("putJSON: ", err.Error())
