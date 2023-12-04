@@ -37,6 +37,11 @@
 }
 
 body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+
     color: var(--black);
     background-color: var(--white);
     font-family: "Open Sans", "Arial", sans-serif;
@@ -44,7 +49,6 @@ body {
     font-weight: 400;
     font-size: 16px;
     line-height: 1.5;
-    min-height: 100vh !important;
 }
 
 
@@ -101,8 +105,10 @@ body {
 }
 
 footer {
-    /*display: none;*/ /* until it fixed */
-    position: absolute;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+
     background-color: #212121;
     color: var(--white);
     margin: 0;
@@ -124,9 +130,8 @@ h2 {
 }
 
 .wrapper {
+    flex: 1;
     min-width: 320px;
-    /*max-width: 90%;*/
-    /*height: 91vh; *//*calc(100vh - 97px);*/
     margin: 0 auto;
     display: flex;
     grid-gap: 60px;
@@ -143,20 +148,20 @@ h2 {
   }
 
 .menu {
+    max-height: 94vh;
+    overflow-y: auto;
+
     grid-area: sidebar;
     position: relative;
     display: block;
     
-    min-height: 100vh;
+    min-height: 94vh;
     width: 500px;
     padding: 0px;
     padding-top: 20px;
     padding-left: 80px;
     margin: 0px;
-    /*margin-top: 20px;
 
-    padding-left: 20px;*/
-    
     color: var(--black);
     background-color: var(--grey);
 }
@@ -170,9 +175,7 @@ h2 {
     font-weight: 700;
 }
 
-/*.menu h2 {
-    background-color: var(--white);
-}*/
+
 .menu ul {
     list-style-type: none;
     color: var(--black);
@@ -188,11 +191,7 @@ h2 {
     font-size: 18px;
     padding: 5px;
     padding-left: 0;
-    /*padding-left: 50px;*/
     padding-right: 10px;
-    /*border-top: 1px solid grey;*/
-    /*border-left: 1px solid grey;*/
-    /*border-right: 1px solid grey;*/
 }
 
 .menu li a {
@@ -201,14 +200,6 @@ h2 {
     text-decoration: none;
 }
 
-/*.menu li:hover {*/
-/*    background-color: var(--green);*/
-/*}*/
-/**/
-/*.menu li:hover * {*/
-/*    color: var(--white);*/
-/*    text-decoration: none;*/
-/*}*/
 
 .menu li a:hover {
     background-color: var(--green);
@@ -220,9 +211,6 @@ h2 {
     padding-bottom: 50px;
 }
 
-/*.menu li:last-child {
-    border-bottom: 1px solid grey;
-}*/
 
 .view { 
     grid-area: content;
@@ -252,7 +240,6 @@ h2 {
 }
 
 .view-wrapper {
-    /*margin-top: 20px;*/
     max-width: 950px;
 }
 

@@ -35,8 +35,7 @@ func (db *Database) InitDatabase(uri string, nameDataset string, collectionDatas
 		db.InitCache()
 	}
 
-	//serverAPI := options.ServerAPI(options.ServerAPIVersion1).SetStrict(true).SetDeprecationErrors(true)
-	db.opts = options.Client().ApplyURI(db.uri) //.SetServerAPIOptions(serverAPI)
+	db.opts = options.Client().ApplyURI(db.uri)
 	db.con, err = mongo.Connect(context.Background(), db.opts)
 
 	if err != nil {
@@ -44,7 +43,6 @@ func (db *Database) InitDatabase(uri string, nameDataset string, collectionDatas
 	}
 	defer db.Disconnect()
 
-	// Send a ping to confirm a successful connection
 	var result bson.M
 	if err := db.con.Database(db.collectionDataset).RunCommand(context.TODO(), bson.D{{Key: "ping", Value: 1}}).Decode(&result); err != nil {
 		return err
@@ -87,6 +85,14 @@ func (db *Database) LoadUsers() (users map[string]s.User, err error) {
 		return result, err
 	}
 	return result, nil
+}
+
+func (db *Database) ReloadSet(set Set) {
+	if db.cacheSet == nil {
+		db.InitCache()
+	}
+	db.cacheSet[set.Name.Name] = set
+	db.LoadSetListCache()
 }
 
 func (db *Database) LoadSet(name string) (Set, error) {
@@ -167,14 +173,10 @@ func (db *Database) DeleteSet(name string) error {
 	defer db.Disconnect()
 
 	collection := db.con.Database(db.nameDataset).Collection(db.collectionDataset)
-	fmt.Println(db.uri, " ", db.nameDataset, " ", db.collectionDataset)
 	filter := bson.D{{Key: "name.name", Value: name}}
-	fmt.Printf("Filter: %+v\n", filter)
 	opts := options.Delete()
-	test, err := collection.DeleteMany(context.Background(), filter, opts)
-	fmt.Println(test, " on ", name)
+	_, err := collection.DeleteMany(context.Background(), filter, opts)
 	if err != nil {
-		fmt.Printf("Error in deletion: %v\n", err)
 		return err
 	}
 	db.LoadSetListCache()

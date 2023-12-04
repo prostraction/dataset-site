@@ -16,8 +16,6 @@ func (app *Application) putJSON(c *fiber.Ctx) error {
 		return c.Status(http.StatusUnauthorized).SendString(err.Error())
 	}
 
-	app.log.Info("here")
-
 	oldDataset := c.Query("oldName", emptyNameSet)
 	if oldDataset == "" {
 		oldDataset = emptyNameSet

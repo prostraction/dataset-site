@@ -19,7 +19,7 @@ func (app *Application) InitFiber(port int) error {
 	})
 	app.host.fiber.Use(cors.New(cors.Config{
 		AllowOrigins: "*", // rename
-		AllowHeaders: "Origin, Content-Type, Accept, Type, Fetch",
+		AllowHeaders: "Origin, Content-Type, Authorization, Accept, Type, Fetch",
 		AllowMethods: strings.Join([]string{
 			fiber.MethodGet,
 			fiber.MethodPost,

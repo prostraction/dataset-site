@@ -29,6 +29,7 @@ func (app *Application) strRegex(str string, index int, useIndex bool) string {
 
 func (app *Application) uploadHandler(c *fiber.Ctx, set db.Set) error {
 	if form, err := c.MultipartForm(); err == nil {
+		app.log.Info(form)
 		/* database */
 		var nameset string
 		if nameset = app.strRegex(set.Name.Name, 0, false); len(nameset) < 1 {
@@ -92,5 +93,6 @@ func (app *Application) uploadHandler(c *fiber.Ctx, set db.Set) error {
 	} else {
 		return errors.New("no jsonDB data received")
 	}
+	app.dbView.ReloadSet(set)
 	return nil
 }

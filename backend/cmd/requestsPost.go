@@ -13,8 +13,6 @@ func (app *Application) postJSON(c *fiber.Ctx) error {
 		return c.Status(http.StatusUnauthorized).SendString(err.Error())
 	}
 
-	app.log.Info("here")
-
 	var set db.Set
 	if err := json.Unmarshal([]byte(c.FormValue("jsonDB")), &set); err != nil {
 		return c.Status(http.StatusInternalServerError).SendString("json parsing error")
