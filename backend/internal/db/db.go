@@ -6,9 +6,9 @@ import (
 	"errors"
 	"fmt"
 
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/v2/bson"
+	"go.mongodb.org/mongo-driver/v2/mongo"
+	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
 type Database struct {
@@ -36,7 +36,7 @@ func (db *Database) InitDatabase(uri string, nameDataset string, collectionDatas
 	}
 
 	db.opts = options.Client().ApplyURI(db.uri)
-	db.con, err = mongo.Connect(context.Background(), db.opts)
+	db.con, err = mongo.Connect(db.opts)
 
 	if err != nil {
 		return err
@@ -52,7 +52,7 @@ func (db *Database) InitDatabase(uri string, nameDataset string, collectionDatas
 }
 
 func (db *Database) Connect() (err error) {
-	db.con, err = mongo.Connect(context.Background(), db.opts)
+	db.con, err = mongo.Connect(db.opts)
 	return err
 }
 
@@ -62,7 +62,7 @@ func (db *Database) Disconnect() (err error) {
 
 func (db *Database) LoadUsers() (users map[string]s.User, err error) {
 	result := make(map[string]s.User)
-	db.con, err = mongo.Connect(context.Background(), db.opts)
+	db.con, err = mongo.Connect(db.opts)
 	if db.con == nil {
 		fmt.Println("Init connection before LoadUsers()")
 		return
@@ -174,8 +174,7 @@ func (db *Database) DeleteSet(name string) error {
 
 	collection := db.con.Database(db.nameDataset).Collection(db.collectionDataset)
 	filter := bson.D{{Key: "name.name", Value: name}}
-	opts := options.Delete()
-	_, err := collection.DeleteMany(context.Background(), filter, opts)
+	_, err := collection.DeleteMany(context.Background(), filter)
 	if err != nil {
 		return err
 	}
