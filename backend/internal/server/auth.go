@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"encoding/base64"
@@ -30,15 +30,15 @@ type (
 	}
 )
 
-func (app *Application) jwtPayloadFromRequest(c *fiber.Ctx) (jwt.MapClaims, error) {
+func (app *Application) JwtPayloadFromRequest(c *fiber.Ctx) (jwt.MapClaims, error) {
 	fulltoken := c.Request().Header.PeekBytes([]byte("Authorization"))
 	if len(fulltoken) < 8 {
 		return nil, errors.New("wrong type of JWT token in context")
 	}
 
 	parsedToken := string(fulltoken[7:])
-	jwtToken, err := jwt.Parse(parsedToken, func(token *jwt.Token) (interface{}, error) {
-		return []byte(app.jwtSign), nil
+	jwtToken, err := jwt.Parse(parsedToken, func(token *jwt.Token) (any, error) {
+		return []byte(app.JwtSign), nil
 	})
 	if err != nil {
 		return nil, errors.New("wrong type of JWT token in context")
@@ -53,12 +53,12 @@ func (app *Application) jwtPayloadFromRequest(c *fiber.Ctx) (jwt.MapClaims, erro
 }
 
 func (app *Application) validateJWT(c *fiber.Ctx) error {
-	jwtPayload, err := app.jwtPayloadFromRequest(c)
+	jwtPayload, err := app.JwtPayloadFromRequest(c)
 	if err != nil {
-		app.log.Info(err.Error())
+		app.Log.Info(err.Error())
 		return err
 	}
-	jwt, exists := app.jwts[jwtPayload["sub"].(string)]
+	jwt, exists := app.Jwts[jwtPayload["sub"].(string)]
 	if !exists {
 		return errors.New("no JWT authorized")
 	}
@@ -77,8 +77,8 @@ func (app *Application) auth(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
 
-	user, exists := app.users[regReq.Login]
-	app.log.Info(user, exists, regReq.Password)
+	user, exists := app.Users[regReq.Login]
+	app.Log.Info(user, exists, regReq.Password)
 	if !exists {
 		return errBadCredentials
 	}
@@ -104,16 +104,16 @@ func (app *Application) auth(c *fiber.Ctx) error {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, payload)
 
-	t, err := token.SignedString([]byte(app.jwtSign))
+	t, err := token.SignedString([]byte(app.JwtSign))
 	if err != nil {
-		app.log.Error("JWT token signing: ", err.Error())
+		app.Log.Error("JWT token signing: ", err.Error())
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	if app.jwts == nil {
-		app.jwts = make(map[string]Auth)
+	if app.Jwts == nil {
+		app.Jwts = make(map[string]Auth)
 	}
-	app.jwts[user.Login] = Auth{
+	app.Jwts[user.Login] = Auth{
 		sub:         user.Login,
 		accessID:    accessID,
 		accessTime:  float64(time),

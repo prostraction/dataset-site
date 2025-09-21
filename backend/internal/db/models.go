@@ -20,6 +20,6 @@ type Set struct {
 }
 
 type Detail struct {
-	Name  string      `json:"Name"`
-	Value interface{} `json:"Value"`
+	Name  string `json:"Name"`
+	Value any    `json:"Value"`
 }

@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"dataset/internal/db"
@@ -29,7 +29,7 @@ func (app *Application) strRegex(str string, index int, useIndex bool) string {
 
 func (app *Application) uploadHandler(c *fiber.Ctx, set db.Set) error {
 	if form, err := c.MultipartForm(); err == nil {
-		app.log.Info(form)
+		app.Log.Info(form)
 		/* database */
 		var nameset string
 		if nameset = app.strRegex(set.Name.Name, 0, false); len(nameset) < 1 {
@@ -48,7 +48,7 @@ func (app *Application) uploadHandler(c *fiber.Ctx, set db.Set) error {
 				set.DownloadLink.Value = str
 			}
 		}
-		if err := app.dbAdmin.PushSet(set); err != nil {
+		if err := app.DbAdmin.PushSet(set); err != nil {
 			return err
 		}
 
@@ -93,6 +93,6 @@ func (app *Application) uploadHandler(c *fiber.Ctx, set db.Set) error {
 	} else {
 		return errors.New("no jsonDB data received")
 	}
-	app.dbView.ReloadSet(set)
+	app.DbView.ReloadSet(set)
 	return nil
 }

@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"dataset/internal/db"
@@ -53,7 +53,7 @@ func (app *Application) putJSON(c *fiber.Ctx) error {
 				datasetPath := filepath.Join("images", oldDataset)
 				if _, ok := images[k.Name()]; !ok {
 					if err := os.Remove(filepath.Join(datasetPath, k.Name())); err != nil {
-						app.log.Info(err)
+						app.Log.Info(err)
 					}
 				}
 			}
@@ -68,7 +68,7 @@ func (app *Application) putJSON(c *fiber.Ctx) error {
 			datasetPath := filepath.Join("downloads", oldDataset)
 			for _, k := range fileList {
 				if err := os.Remove(filepath.Join(datasetPath, k.Name())); err != nil {
-					app.log.Info(err)
+					app.Log.Info(err)
 				}
 			}
 		}
@@ -81,10 +81,10 @@ func (app *Application) putJSON(c *fiber.Ctx) error {
 		app.moveHandler("downloads", oldDataset, newDataset)
 	}
 	/* upload files */
-	app.dbAdmin.DeleteSet(oldDataset)
+	app.DbAdmin.DeleteSet(oldDataset)
 
 	if err := app.uploadHandler(c, set); err != nil {
-		app.log.Info("putJSON: ", err.Error())
+		app.Log.Info("putJSON: ", err.Error())
 		return c.Status(http.StatusInternalServerError).SendString(err.Error())
 	}
 	return c.SendStatus(http.StatusAccepted)

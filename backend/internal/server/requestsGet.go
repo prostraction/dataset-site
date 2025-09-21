@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"net/http"
@@ -16,7 +16,7 @@ func (app *Application) getSet(c *fiber.Ctx) error {
 	if nameSet == emptyNameSet {
 		return c.Status(http.StatusInternalServerError).SendString("name is required")
 	}
-	jsonSet, err := app.dbView.LoadSet(nameSet)
+	jsonSet, err := app.DbView.LoadSet(nameSet)
 	if err != nil {
 		return c.Status(http.StatusInternalServerError).SendString("database error" + err.Error())
 	}
@@ -24,7 +24,7 @@ func (app *Application) getSet(c *fiber.Ctx) error {
 }
 
 func (app *Application) getListOfSets(c *fiber.Ctx) error {
-	jsonSet, err := app.dbView.LoadList()
+	jsonSet, err := app.DbView.LoadList()
 	if err != nil {
 		return c.Status(http.StatusInternalServerError).SendString("database error" + err.Error())
 	}

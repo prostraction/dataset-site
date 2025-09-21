@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"dataset/internal/db"
@@ -18,7 +18,7 @@ func (app *Application) postJSON(c *fiber.Ctx) error {
 		return c.Status(http.StatusInternalServerError).SendString("json parsing error")
 	}
 	if err := app.uploadHandler(c, set); err != nil {
-		app.log.Info("postJSON: ", err.Error())
+		app.Log.Info("postJSON: ", err.Error())
 		return c.Status(http.StatusInternalServerError).SendString(err.Error())
 	}
 	return c.SendStatus(http.StatusCreated)
