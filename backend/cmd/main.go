@@ -24,6 +24,7 @@ func main() {
 	if err != nil {
 		app.Log.Error("Unable to load users: ", err.Error())
 	}
+	app.Log.Info(app.Users)
 	app.JwtSign, err = app.GetEnv(2)
 	if err != nil {
 		app.Log.Fatal("Unable to load JWT sign. Did you forget to load mongo.env?")

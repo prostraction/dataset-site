@@ -17,10 +17,10 @@ export default class AddDS extends React.Component {
   static initialJson = {
     name: {
       Name: "Dataset name",
-      Value: "Название датасета",
+      Value: "Dataset name",
     },
     category: {
-      Name: "Категория",
+      Name: "Category",
       Value: "none",
     },
     description: {
@@ -28,31 +28,31 @@ export default class AddDS extends React.Component {
       Value: "",
     },
     date: {
-      Name: "Обновлено ",
+      Name: "Updated ",
       Value: "01.01.1970",
     },
     time: {
-      Name: "в ",
+      Name: "at ",
       Value: "00:00",
     },
     count: {
-      Name: "Количество фотографий: ",
+      Name: "Count of images: ",
       Value: "100",
     },
     resolution: {
-      Name: "Разрешение (px): ",
+      Name: "Resolution (px): ",
       Value: "1000x1000",
     },
     iso: {
       Name: "ISO: ",
-      Value: "в зависимости от сцены",
+      Value: "depends on scene",
     },
     colorModel: {
-      Name: "Цветовая модель: ",
+      Name: "Color model: ",
       Value: "aRGB",
     },
     format: {
-      Name: "Формат: ",
+      Name: "File format: ",
       Value: ".png",
     },
     imagePreviewName: [],
@@ -143,13 +143,13 @@ export default class AddDS extends React.Component {
         >
           <input
             type="submit"
-            value="Создать"
+            value="Create"
             className="buttonPlaceholder"
             onClick={this.handleSubmit}
           ></input>
           <input
             type="reset"
-            value="Сбросить"
+            value="Reset"
             className="buttonReset"
             onClick={() => {
               this.setState({

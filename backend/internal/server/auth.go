@@ -87,9 +87,10 @@ func (app *Application) auth(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
-	val := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(passDebase64))
+	errHash := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(passDebase64))
 	// wrong password
-	if val != nil {
+	if errHash != nil {
+		app.Log.Info(errHash)
 		return errBadCredentials
 	}
 

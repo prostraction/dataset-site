@@ -51,172 +51,216 @@ body {
     line-height: 1.5;
 }
 
-
 .header {
     background-color: #212121;
     color: var(--white);
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
     display: flex;
-    flex-direction: row;
-    padding: 5px 0px 0px;
     align-items: center;
-    padding-bottom: 5px;
+    height: 60px;
+    padding: 0;
 }
 
-.header * {
-    color: var(--white);
+.header-nav {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 0 40px;
 }
 
 .logo {
-    display: inline-block;
-    font-weight: 400;
-    font-size: 24px;
-    padding-left: 40px;
-    text-align: center;
+    font-weight: 700;
+    font-size: 28px;
+    text-decoration: none;
+    color: var(--white);
+    margin-right: 40px;
 }
 
-.header nav ul {
+.logo:hover {
+    color: var(--green);
+    text-decoration: none;
+}
+
+.header-menu {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.header-menu ul {
     display: flex;
     margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
-.header nav li {
-    display: inline-block;
-    margin-left: 20px;
+.header-menu li {
+    margin: 0 15px;
 }
 
-.header-signin {
-    position: absolute;
-    right: 60px;
-}
-
-.header nav a {
-    display: inline-block;
+.header-menu a {
     color: var(--white);
     font-size: 16px;
     text-decoration: none;
-    padding: 10px 15px 10px 15px;
-    text-align: center;
+    padding: 10px 15px;
+    transition: color 0.3s ease;
 }
 
-.header nav a:hover {
+.header-menu a:hover {
     color: var(--green);
+}
+
+.header-auth {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+}
+
+.header-auth a,
+.header .user-info button {
+    background: transparent;
+    color: var(--white);
+    border: 1px solid var(--white);
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-family: "Open Sans", "Arial", sans-serif;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    height: 36px;
+}
+
+.header-auth a:hover,
+.header .user-info button:hover {
+    background: var(--white);
+    color: #212121;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-info span {
+    color: var(--white);
+}
+
+
+.main-container {
+    display: flex;
+    flex: 1;
+    width: 100%;
+    margin-top: 60px;
+    margin-bottom: 0px;
+    min-height: calc(100vh - 60px);
+}
+
+
+.sidebar {
+    flex: 0 0 300px;
+    background-color: var(--grey);
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.menu {
+    margin: 0;
+    padding: 0;
+}
+
+.menu h3 {
+    font-weight: 400;
+    font-size: 16px;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.menuCategory {
+    font-weight: 700;
+    margin: 15px 0 10px 0;
+    color: var(--black);
+}
+
+.menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu li {
+    margin: 8px 0;
+}
+
+.menu li a {
+    display: block;
+    font-size: 16px;
+    color: var(--black);
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.menu li a:hover {
+    background-color: var(--green);
+    color: var(--white);
+}
+
+.content {
+    flex: 1;
+    padding: 20px 40px;
+    overflow-y: auto;
 }
 
 footer {
     position: fixed;
     bottom: 0;
     width: 100%;
-
     background-color: #212121;
     color: var(--white);
     margin: 0;
     padding: 0;
     min-width: 100%;
+    height: auto;
 }
 
-/* logo */
+.wrapper-footer {
+    min-width: 320px;
+    max-width: 10%;
+    padding: 5px;
+    margin: 0 auto;
+    display: flex;
+}
+.wrapper-footer > * {
+    margin: 0 auto;
+}
+
 h1 {
-    font-size: 30px;
+    font-size: 32px;
     font-weight: 700;
     line-height: 1.1;
-    margin: 0;
+    margin: 0 0 20px 0;
 }
-/* title */
+
 h2 {
-    margin: 0;
-    margin-bottom: 20px;
+    margin: 0 0 20px 0;
+    font-size: 24px;
+    font-weight: 600;
 }
 
-.wrapper {
-    flex: 1;
-    min-width: 320px;
-    margin: 0 auto;
-    display: flex;
-    grid-gap: 60px;
-    grid-template-areas: 
-      "sidebar content"
-  }
-
-  .wrapper-footer {
-    min-width: 320px;
-    max-width: 90%;
-    padding: 8px;
-    margin: 0 auto;
-    display: flex;
-  }
-
-.menu {
-    max-height: 94vh;
-    overflow-y: auto;
-
-    grid-area: sidebar;
-    position: relative;
-    display: block;
-    
-    min-height: 94vh;
-    width: 500px;
-    padding: 0px;
-    padding-top: 20px;
-    padding-left: 80px;
-    margin: 0px;
-
-    color: var(--black);
-    background-color: var(--grey);
-}
-
-.menu h3 {
-    font-weight: 400;
-    font-size: 16px;
-}
-
-.menuCategory {
-    font-weight: 700;
-}
-
-
-.menu ul {
-    list-style-type: none;
-    color: var(--black);
-    background-color: var(--grey);
-    padding: 0px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    margin: 0px;
-}
-
-
-.menu li {
-    font-size: 18px;
-    padding: 5px;
-    padding-left: 0;
-    padding-right: 10px;
-}
-
-.menu li a {
-    font-size: 16px;
-    color: var(--black);
-    text-decoration: none;
-}
-
-
-.menu li a:hover {
-    background-color: var(--green);
-    color: var(--white);
-    text-decoration: none;
-}
-
-.menu > ul:last-child > ul:last-child {
-    padding-bottom: 50px;
-}
-
-
-.view { 
-    grid-area: content;
-    margin: 0;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    padding-bottom: 40px;
+.view {
+    width: 100%;
 }
 
 .view ul, .auth ul {
@@ -228,10 +272,9 @@ h2 {
     margin: 1rem 0;
     height: 2rem;
     line-height: 2rem;
-    left: -1rem;
     text-align: center;
-    border-radius: 0.5rem 0.5rem 0.5rem 0.5rem;
-    box-shadow: 0.15rem 0.15rem 0.6rem rgba(0,0,0,0.15), 0 0.5rem 1.125rem rgba(146, 145, 145, 0);
+    border-radius: 0.5rem;
+    box-shadow: 0.15rem 0.15rem 0.6rem rgba(0,0,0,0.15);
 }
 
 .view h2 {
@@ -239,25 +282,33 @@ h2 {
 }
 
 .view-wrapper {
-    max-width: 950px;
+    max-width: 100%;
 }
 
 .view-wrapper p {
-    margin: 0;
+    margin: 0 0 15px 0;
 }
 
 .imagesPreview {
-    display: inline-block;
-    flex-direction: row;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 15px 0;
 }
 
 .imagesPreview img{
     border: 1px solid grey;
-    margin-right: 10px;
+    max-width: 200px;
+    height: auto;
 }
 
 a {
     color: var(--green);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
 }
 
 button {
@@ -268,22 +319,19 @@ button {
     border-radius: 4px;
     margin-top: 10px;
     margin-right: 10px;
-    padding: 10px;
-    padding-top: 6px;
-    padding-bottom: 6px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 button a {
     text-decoration: none;
+    color: inherit;
 }
 
 button:hover {
     color: var(--white);
     background-color: var(--green);
-}
-
-button:hover * {
-    color: var(--white);
 }
 
 .buttonPlaceholder {
@@ -294,22 +342,7 @@ button:hover * {
     border-radius: 4px;
     margin-top: 10px;
     margin-right: 10px;
-    padding: 10px;
-    padding-top: 6px;
-    padding-bottom: 6px;
-}
-
-.buttonPlaceholder a {
-    text-decoration: none;
-}
-
-.buttonPlaceholder:hover {
-    color: var(--white);
-    background-color: var(--green);
-}
-
-.buttonReset:hover * {
-    color: var(--white);
+    padding: 10px 15px;
 }
 
 .buttonReset {
@@ -320,13 +353,7 @@ button:hover * {
     border-radius: 4px;
     margin-top: 10px;
     margin-right: 10px;
-    padding: 10px;
-    padding-top: 6px;
-    padding-bottom: 6px;
-}
-
-.buttonReset a {
-    text-decoration: none;
+    padding: 10px 15px;
 }
 
 .buttonReset:hover {
@@ -334,205 +361,239 @@ button:hover * {
     background-color: grey;
 }
 
-.buttonReset:hover * {
-    color: var(--white);
-}
-
 input {
     margin-right: 5px;
     margin-bottom: 5px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
 }
 
 .rowEdit {
     display: grid;
     grid-auto-flow: column;
     grid-column-gap: 10px;
+    align-items: center;
 }
 
 .rowEdit > input {
-    border: 1px dashed;
+    border: 1px dashed #ccc;
 }
-
 
 .hidingAdditionalInput {
     display: none;
 }
 
 .selectionImg {
-    width: 300px;
-    height: 300px;
+    width: 200px;
+    height: 200px;
     background: url(/img/add.svg);
-    background-size: 120px;
+    background-size: 60px;
     background-repeat: no-repeat;
     background-position: center;
     margin-top: 10px;
     margin-right: 10px;
     border: 1px solid var(--green);
     color: transparent;
-    text-indent: -9999px;
+    cursor: pointer;
 }
 
 .selectedImg {
-    width: 300px;
-    height: 300px;
+    width: 200px;
+    height: 200px;
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 300px;
+    background-size: cover;
     margin-top: 10px;
     margin-right: 10px;
     border: 1px solid var(--green);
-    color: transparent;
-    text-indent: -9999px;
 }
 
 .auth {
-    display: block;
-    position: relative;
-    text-align: center;
-    margin: auto;
-    padding-top: 33vh;
-    padding-bottom: 33vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 120px);
+    padding: 40px 20px;
 }
 
 .auth p {
     margin-bottom: 30px;
+    text-align: center;
+}
+
+.auth > form > ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
 }
 
 .auth > form > ul > li {
-    width: 200px;
+    width: 100%;
+    max-width: 300px;
 }
 
 .auth > form > ul > li > input {
-    border: none;
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
 }
 
 .auth > form > ul > button {
     margin-top: 20px;
-    width: 200px;
+    width: 100%;
+    max-width: 300px;
 }
 
-@media screen and (max-width: 1400px) {
-    .imagesPreview img {
-        max-width: 200px;
-        max-height: 200px;
+@media screen and (max-width: 1200px) {
+    .sidebar {
+        flex: 0 0 250px;
     }
-    .selectionImg {
-       width: 200px;
-       height: 200px;
-    }
-    .selectedImg {
-        width: 200px;
-        height: 200px;
-        background-size: 200px;
-     }
 }
 
 @media screen and (max-width: 900px) {
-    .imagesPreview img {
-        max-width: 150px;
-        max-height: 150px;
-    }
-    .selectionImg {
-        width: 150px;
-        height: 150px;
-     }
-     .selectedImg {
-        width: 150px;
-        height: 150px;
-        background-size: 150px;
-     }
-     .hideingAdditionalInput {
-        display: inline;
-    }
-    .smallPlaceholder {
-       max-width: 300px;
-    }
-    .tinyPlaceholder {
-        max-width: 300px;
-    }
-}
-
-@media screen and (max-width: 750px) {
-    .wrapper {
+    .main-container {
         flex-direction: column;
     }
-    .imagesPreview img {
-        max-width: 200px;
-        max-height: 200px;
-    }
-    .selectionImg {
-        width: 200px;
-        height: 200px;
-     }
-     .selectedImg {
-        width: 200px;
-        height: 200px;
-        background-size: 200px;
-     }
-
-    .menu {
+    
+    .sidebar {
+        flex: none;
         width: 100%;
-        padding: 0;
+        order: 2;
+    }
+    
+    .content {
+        order: 1;
+        padding: 20px;
+    }
+    
+    .header-nav {
+        padding: 0 20px;
+        flex-wrap: wrap;
+        height: auto;
+        min-height: 60px;
+    }
+    
+    .header-menu {
+        order: 2;
+        width: 100%;
+        justify-content: center;
+        margin-top: 10px;
+    }
+    
+    .header-auth {
+        margin-left: auto;
+        order: 1;
+    }
+    
+    .main-container {
+        margin-top: 80px;
     }
 }
 
-@media screen and (max-width: 670px) {
-    .imagesPreview img {
-        max-width: 170px;
-        max-height: 170px;
+@media screen and (max-width: 768px) {
+    .logo {
+        font-size: 24px;
+        margin-right: 20px;
     }
-    .selectionImg {
-        width: 170px;
-        height: 170px;
-     }
-     .selectedImg {
-        width: 170px;
-        height: 170px;
-        background-size: 170px;
-     }
+    
+    .header-nav {
+        padding: 0 15px;
+    }
+    
+    .header-menu li {
+        margin: 0 8px;
+    }
+    
+    .header-menu a {
+        padding: 8px 10px;
+        font-size: 14px;
+    }
+    
+    .content {
+        padding: 15px;
+    }
+    
+    .sidebar {
+        padding: 15px;
+    }
+    
+    .user-info {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .header-nav {
+        flex-direction: column;
+        padding: 10px 15px;
+        height: auto;
+    }
+    
+    .logo {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+    
+    .header-menu {
+        order: 1;
+        width: 100%;
+        justify-content: center;
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+    
+    .header-auth {
+        order: 2;
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .header-menu ul {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .header-menu li {
+        margin: 5px;
+    }
+    
+    .main-container {
+        margin-top: 120px;
+    }
 }
 
 @media screen and (max-width: 560px) {
     .imagesPreview img {
         max-width: 150px;
-        max-height: 150px;
     }
-    .selectionImg {
+    
+    .selectionImg, .selectedImg {
         width: 150px;
         height: 150px;
-     }
-     .selectedImg {
-        width: 150px;
-        height: 150px;
-        background-size: 150px;
-     }
+    }
 }
 
-@media screen and (max-width: 500px) {
-    /*.imagesPreview img:last-child {
-        display: none;
+@media screen and (max-width: 480px) {
+    .logo {
+        font-size: 20px;
     }
-    .imagesPreview img {
-        max-width: 200px;
-        max-height: 200px;
-    }*/
-}
-
-@media screen and (max-width: 450px) {
-    .imagesPreview {
-        display: inline-block;
+    
+    h1 {
+        font-size: 24px;
     }
-    .imagesPreview img {
-        max-width: 150px;
-        max-height: 150px;
+    
+    h2 {
+        font-size: 20px;
     }
-    .selectionImg {
-        width: 150px;
-        height: 150px;
-     }
-     .selectedImg {
-        width: 150px;
-        height: 150px;
-        background-size: 150px;
-     }
+    
+    .header-menu a {
+        padding: 6px 8px;
+        font-size: 13px;
+    }
 }
